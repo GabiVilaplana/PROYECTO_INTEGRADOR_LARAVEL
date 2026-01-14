@@ -39,3 +39,6 @@ test:
 artisan:
 	@docker compose run --rm app php artisan $(CMD)
 	@true
+
+migrate_fresh:
+	docker compose run --rm app php artisan migrate:fresh
