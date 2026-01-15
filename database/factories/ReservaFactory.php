@@ -3,18 +3,24 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use App\Models\Reserva;
+use App\Models\Usuario;
 
 class ReservaFactory extends Factory
 {
-    protected $model = \App\Models\Reserva::class;
+    protected $model = Reserva::class;
 
     public function definition()
     {
+        $usuario = Usuario::whereHas('rol', function($q){
+            $q->where('Nombre','usuario');
+        })->inRandomOrder()->first();
+
         return [
-            'IDUsuario' => \App\Models\Usuario::factory(),
-            'FechaReserva' => $this->faker->date(),
-            'Estado' => $this->faker->randomElement(['Pendiente','Confirmada','Cancelada']),
-            'Total' => $this->faker->randomFloat(2, 20, 500),
+            'idUsuario' => $usuario->IDUsuario,
+            'FechaReserva' => $this->faker->dateTimeBetween('-1 month', 'now'),
+            'Estado' => $this->faker->randomElement(['pendiente','confirmada','cancelada']),
+            'Total' => $this->faker->randomFloat(2, 50, 300),
         ];
     }
 }

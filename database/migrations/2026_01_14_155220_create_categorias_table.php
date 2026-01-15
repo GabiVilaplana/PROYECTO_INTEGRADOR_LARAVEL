@@ -5,18 +5,20 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration {
-    public function up(): void {
+    public function up(): void
+    {
         Schema::create('categorias', function (Blueprint $table) {
-            $table->id(); // IDCategoria
-            $table->string('nombre');
-            $table->text('descripcion')->nullable();
-            $table->string('color')->nullable();
-            $table->boolean('activa')->default(true);
+            $table->id('IDCategoria');
+            $table->string('Nombre')->unique();
+            $table->text('Descripcion')->nullable();
+            $table->string('Color')->nullable();
+            $table->boolean('Activa')->default(true);
             $table->timestamps();
         });
     }
 
-    public function down(): void {
+    public function down(): void
+    {
         Schema::dropIfExists('categorias');
     }
 };

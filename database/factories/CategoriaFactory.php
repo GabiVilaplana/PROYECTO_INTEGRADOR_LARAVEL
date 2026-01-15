@@ -11,10 +11,10 @@ class CategoriaFactory extends Factory
     public function definition()
     {
         return [
-            'Nombre' => $this->faker->word(),
-            'Descripcion' => $this->faker->sentence(),
-            'Color' => $this->faker->safeColorName(),
-            'Activa' => true,
+            'nombre' => $this->faker->word(),
+            'descripcion' => $this->faker->sentence(),
+            'color' => $this->faker->hexColor(),
+            'activa' => true,
         ];
     }
 }

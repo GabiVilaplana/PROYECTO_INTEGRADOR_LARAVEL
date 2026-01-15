@@ -3,19 +3,28 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use App\Models\ValoracionServicio;
+use App\Models\Usuario;
+use App\Models\Servicio;
 
 class ValoracionServicioFactory extends Factory
 {
-    protected $model = \App\Models\ValoracionServicio::class;
+    protected $model = ValoracionServicio::class;
 
     public function definition()
     {
+        $usuario = Usuario::whereHas('rol', function($q){
+            $q->where('Nombre','usuario');
+        })->inRandomOrder()->first();
+
+        $servicio = Servicio::inRandomOrder()->first();
+
         return [
-            'IDServicio' => \App\Models\Servicio::factory(),
-            'IDUsuario' => \App\Models\Usuario::factory(),
-            'Puntuacion' => $this->faker->numberBetween(1,5),
+            'idUsuario' => $usuario->IDUsuario,
+            'idServicio' => $servicio->IDServicio,
+            'Puntuacion' => $this->faker->numberBetween(3,5),
             'Comentario' => $this->faker->sentence(),
-            'Fecha' => $this->faker->date(),
+            'Fecha' => $this->faker->dateTimeBetween('-1 month', 'now'),
         ];
     }
 }

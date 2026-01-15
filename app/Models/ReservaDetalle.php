@@ -7,6 +7,25 @@ use Illuminate\Database\Eloquent\Model;
 
 class ReservaDetalle extends Model
 {
-    /** @use HasFactory<\Database\Factories\ReservaDetalleFactory> */
     use HasFactory;
+
+    protected $primaryKey = 'IDDetalle';
+
+    protected $fillable = [
+        'idReserva',
+        'idServicio',
+        'Precio',
+        'FechaServicio',
+        'HoraServicio',
+    ];
+
+    public function reserva()
+    {
+        return $this->belongsTo(Reserva::class, 'idReserva', 'IDReserva');
+    }
+
+    public function servicio()
+    {
+        return $this->belongsTo(Servicio::class, 'idServicio', 'IDServicio');
+    }
 }

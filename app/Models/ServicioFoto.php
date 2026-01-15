@@ -7,6 +7,18 @@ use Illuminate\Database\Eloquent\Model;
 
 class ServicioFoto extends Model
 {
-    /** @use HasFactory<\Database\Factories\ServicioFotoFactory> */
     use HasFactory;
+
+    protected $primaryKey = 'IDFoto';
+
+    protected $fillable = [
+        'idServicio',
+        'RutaFoto',
+        'EsPrincipal',
+    ];
+
+    public function servicio()
+    {
+        return $this->belongsTo(Servicio::class, 'idServicio', 'IDServicio');
+    }
 }

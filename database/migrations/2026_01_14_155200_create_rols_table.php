@@ -8,12 +8,11 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create('rols', function (Blueprint $table) {
-            $table->id();
-            $table->string('nombre')->unique();
-            $table->text('descripcion')->nullable(); // <-- añadir esta línea
+            $table->id('IDRol');
+            $table->string('Nombre')->unique();
+            $table->string('Descripcion')->nullable();
             $table->timestamps();
         });
-
     }
 
     public function down(): void

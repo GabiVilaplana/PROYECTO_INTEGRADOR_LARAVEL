@@ -3,17 +3,21 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use App\Models\ServicioFoto;
+use App\Models\Servicio;
 
 class ServicioFotoFactory extends Factory
 {
-    protected $model = \App\Models\ServicioFoto::class;
+    protected $model = ServicioFoto::class;
 
     public function definition()
     {
+        $servicio = Servicio::inRandomOrder()->first();
+
         return [
-            'IDServicio' => \App\Models\Servicio::factory(),
-            'RutaFoto' => $this->faker->imageUrl(640, 480, 'business'),
-            'EsPrincipal' => $this->faker->boolean(30),
+            'idServicio' => $servicio->IDServicio,
+            'RutaFoto' => 'images/'.$this->faker->word().'.jpg',
+            'EsPrincipal' => $this->faker->boolean(50),
         ];
     }
 }

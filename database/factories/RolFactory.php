@@ -11,7 +11,7 @@ class RolFactory extends Factory
     public function definition()
     {
         return [
-            'nombre' => $this->faker->unique()->randomElement(['admin','usuario','empleado']),
+            'nombre' => $this->faker->word(), // no se usará, los roles se crean en Seeder
             'descripcion' => $this->faker->sentence(),
         ];
     }

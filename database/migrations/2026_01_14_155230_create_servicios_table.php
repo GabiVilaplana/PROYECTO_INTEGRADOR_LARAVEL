@@ -5,21 +5,23 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration {
-    public function up(): void {
+    public function up(): void
+    {
         Schema::create('servicios', function (Blueprint $table) {
-            $table->id(); // IDServicio
-            $table->string('nombre');
-            $table->text('descripcion')->nullable();
-            $table->decimal('precio', 10, 2);
-            $table->integer('duracion'); // minutos
-            $table->boolean('activo')->default(true);
-            $table->foreignId('categoria_id')->constrained('categorias'); // IDCategoria
-            $table->foreignId('proveedor_id')->constrained('proveedors'); // IDProveedor
+            $table->id('IDServicio');
+            $table->string('Nombre');
+            $table->text('Descripcion')->nullable();
+            $table->decimal('Precio', 8, 2);
+            $table->integer('Duracion'); // en minutos
+            $table->boolean('Activo')->default(true);
+            $table->foreignId('idCategoria')->constrained('categorias','IDCategoria')->onDelete('cascade');
+            $table->foreignId('idProveedor')->constrained('usuarios','IDUsuario')->onDelete('cascade');
             $table->timestamps();
         });
     }
 
-    public function down(): void {
+    public function down(): void
+    {
         Schema::dropIfExists('servicios');
     }
 };

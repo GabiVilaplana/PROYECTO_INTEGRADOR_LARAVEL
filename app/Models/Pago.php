@@ -7,6 +7,20 @@ use Illuminate\Database\Eloquent\Model;
 
 class Pago extends Model
 {
-    /** @use HasFactory<\Database\Factories\PagoFactory> */
     use HasFactory;
+
+    protected $primaryKey = 'IDPago';
+
+    protected $fillable = [
+        'idReserva',
+        'MetodoPago',
+        'Estado',
+        'Importe',
+        'FechaPago',
+    ];
+
+    public function reserva()
+    {
+        return $this->belongsTo(Reserva::class, 'idReserva', 'IDReserva');
+    }
 }

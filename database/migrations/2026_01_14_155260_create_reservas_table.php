@@ -5,18 +5,20 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration {
-    public function up(): void {
+    public function up(): void
+    {
         Schema::create('reservas', function (Blueprint $table) {
-            $table->id(); // IDReserva
-            $table->foreignId('usuario_id')->constrained('usuarios'); // IDUsuario
-            $table->date('fecha_reserva');
-            $table->string('estado')->default('pendiente');
-            $table->decimal('total', 10, 2)->default(0);
+            $table->id('IDReserva');
+            $table->foreignId('idUsuario')->constrained('usuarios','IDUsuario')->onDelete('cascade');
+            $table->dateTime('FechaReserva');
+            $table->string('Estado');
+            $table->decimal('Total', 8, 2);
             $table->timestamps();
         });
     }
 
-    public function down(): void {
+    public function down(): void
+    {
         Schema::dropIfExists('reservas');
     }
 };

@@ -3,19 +3,23 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use App\Models\Pago;
+use App\Models\Reserva;
 
 class PagoFactory extends Factory
 {
-    protected $model = \App\Models\Pago::class;
+    protected $model = Pago::class;
 
     public function definition()
     {
+        $reserva = Reserva::inRandomOrder()->first();
+
         return [
-            'IDReserva' => \App\Models\Reserva::factory(),
-            'MetodoPago' => $this->faker->randomElement(['Tarjeta','Efectivo','Transferencia']),
-            'Estado' => $this->faker->randomElement(['Pendiente','Pagado','Fallido']),
-            'Importe' => $this->faker->randomFloat(2, 20, 500),
-            'FechaPago' => $this->faker->date(),
+            'idReserva' => $reserva->IDReserva,
+            'MetodoPago' => $this->faker->randomElement(['tarjeta','paypal','efectivo']),
+            'Estado' => $this->faker->randomElement(['pendiente','completado','fallido']),
+            'Importe' => $reserva->Total,
+            'FechaPago' => $reserva->FechaReserva->modify('+'.rand(0,1).' days'),
         ];
     }
 }

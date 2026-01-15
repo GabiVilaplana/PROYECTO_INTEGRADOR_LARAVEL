@@ -7,6 +7,22 @@ use Illuminate\Database\Eloquent\Model;
 
 class Mensaje extends Model
 {
-    /** @use HasFactory<\Database\Factories\MensajeFactory> */
     use HasFactory;
+
+    protected $primaryKey = 'IDMensaje';
+
+    protected $fillable = [
+        'idUsuario',
+        'Nombre',
+        'Email',
+        'Asunto',
+        'Contenido',
+        'Estado',
+        'FechaEnvio',
+    ];
+
+    public function usuario()
+    {
+        return $this->belongsTo(Usuario::class, 'idUsuario', 'IDUsuario');
+    }
 }
