@@ -49,4 +49,19 @@ class Usuario extends Authenticatable
     {
         return $this->hasMany(Mensaje::class, 'idUsuario', 'IDUsuario');
     }
+
+    public function getEmailAttribute()
+    {
+        return $this->attributes['CorreoElectronico'];
+    }
+
+    public function setPasswordAttribute($value)
+    {
+        $this->attributes['Password'] = bcrypt($value);
+    }
+
+    public function getAuthPassword()
+    {
+        return $this->attributes['Password'];
+    }
 }

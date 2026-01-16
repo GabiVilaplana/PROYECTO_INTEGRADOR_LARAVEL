@@ -1,0 +1,23 @@
+body{
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+}
+
+header{
+    background-color: white;
+}
+.logo-icon{
+    width: 150px;
+    height: 75px;
+}
+ .texto-servicios {
+    color: #333;
+    font-weight: bold;
+    font-size: 14px;
+    margin-right: 20px;
+    cursor: pointer;
+    display: inline-block;
+    vertical-align: middle;
+    line-height: 80px;
+  }

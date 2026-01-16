@@ -42,3 +42,7 @@ artisan:
 
 migrate_fresh:
 	docker compose run --rm app php artisan migrate:fresh
+
+composer:
+	@docker compose run --rm app composer $(CMD)
+	@true
