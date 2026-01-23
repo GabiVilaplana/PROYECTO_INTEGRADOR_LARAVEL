@@ -1,7 +1,9 @@
 @vite(['resources/js/app.js'])
 <header>
     <div class="logo-container">
-        <img src="{{ asset('IMG/logo.png') }}" alt="TaskLink Logo" class="logo-icon">
+        <a href="{{ url('/') }}">
+            <img src="{{ asset('IMG/logo.png') }}" alt="TaskLink Logo" class="logo-icon">
+        </a>
     </div>
     <div class="searchBar" tabindex="0">
         <div class="searchBarZona" id="zonaToggle">

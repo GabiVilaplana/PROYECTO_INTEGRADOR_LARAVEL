@@ -33,6 +33,9 @@ install:
 migrate:
 	docker compose run --rm app php artisan migrate
 
+populate:
+	docker compose run --rm app php artisan db:seed
+
 test:
 	docker compose run --rm app php artisan test -q
 

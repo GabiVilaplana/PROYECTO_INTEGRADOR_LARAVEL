@@ -16,11 +16,16 @@ class Categoria extends Model
         'Descripcion',
         'Color',
         'Activa',
+        'Imagen',
     ];
 
     // Relación con servicios
     public function servicios()
     {
         return $this->hasMany(Servicio::class, 'idCategoria', 'IDCategoria');
+    }
+    public function getImagenAttribute($value)
+    {
+        return $value ?? 'categorias/default.jpg';
     }
 }

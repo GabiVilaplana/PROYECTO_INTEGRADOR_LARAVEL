@@ -15,6 +15,8 @@ class CategoriaFactory extends Factory
             'descripcion' => $this->faker->sentence(),
             'color' => $this->faker->hexColor(),
             'activa' => true,
+            'Imagen' => 'categorias/' . $this->faker->image('storage/app/public/categorias', 400, 300, null, false),
+
         ];
     }
 }
