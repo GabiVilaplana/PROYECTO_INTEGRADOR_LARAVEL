@@ -1,10 +1,13 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Models\Categoria;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('index');
+    $categorias = Categoria::where('Activa', 1)->get();
+    return view('index', compact('categorias'));
+
 });
 
 Route::get('/dashboard', function () {

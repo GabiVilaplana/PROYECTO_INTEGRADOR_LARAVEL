@@ -4,5 +4,5 @@
 
 
 @section('content')
-    @include('layouts.partials.containerPaginaPrincipal')
+    @include('layouts.partials.containerPaginaPrincipal', ['categorias' => $categorias])
 @endsection
