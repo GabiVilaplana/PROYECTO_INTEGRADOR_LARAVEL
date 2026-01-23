@@ -5,7 +5,7 @@ use App\Models\Categoria;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    $categorias = Categoria::where('Activa', 1)->get();
+    $categorias = Categoria::where('Activa', true)->get();
     return view('index', compact('categorias'));
 
 });

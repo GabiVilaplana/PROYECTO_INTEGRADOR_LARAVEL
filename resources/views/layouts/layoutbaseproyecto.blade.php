@@ -1,3 +1,4 @@
+
 <body>
     @include('layouts.partials.header')
     <main>@yield('content')</main>
