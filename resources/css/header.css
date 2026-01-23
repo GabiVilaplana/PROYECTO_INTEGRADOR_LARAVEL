@@ -1,17 +1,38 @@
-body{
+body {
     margin: 0;
     padding: 0;
     overflow-x: hidden;
 }
 
-header{
-    background-color: white;
+header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 32px;
+    height: 100px;
+    background-color: #cce6ff75;
+    margin-bottom: 50px;
+    gap: 10px;
+    border: 1px solid lightgrey;
+
 }
-.logo-icon{
+
+.logo-container {
+    display: flex;
+    align-items: center;
+}
+
+.right-header {
+    display: flex;
+    align-items: center;
+}
+
+.logo-icon {
     width: 150px;
     height: 75px;
 }
- .texto-servicios {
+
+.texto-servicios {
     color: #333;
     font-weight: bold;
     font-size: 14px;
@@ -20,4 +41,114 @@ header{
     display: inline-block;
     vertical-align: middle;
     line-height: 80px;
-  }
+}
+.searchBar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    background: #fdfcff; /* tono muy sutil */
+    border-radius: 20px;
+    box-shadow: 0 6px 15px rgba(0, 60, 160, 0.08); /* más ligero */
+    max-width: 950px;
+    flex: 1;
+    transition: all 0.25s ease;
+    cursor: pointer;
+    /* permite que el div reciba foco para :focus-within */
+    tabindex: 0;
+}
+
+/* ---------- BLOQUES INTERNOS ---------- */
+.searchBarZona,
+.searchBarDate,
+.searchBarServicio {
+    position: relative;
+    flex: 1;
+    padding: 12px 16px;
+    border-radius: 14px;
+    background: #f5f9ff;
+    border: 1px solid #d6e4ff;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.searchBarZona:hover,
+.searchBarDate:hover,
+.searchBarServicio:hover {
+    background: #eef4ff;
+    border-color: #a9c6ff;
+}
+
+/* ---------- TEXTOS ---------- */
+.searchBar h5 {
+    margin: 0;
+    font-size: 12px;
+    font-weight: 600;
+    color: #2b4ea2;
+}
+
+.searchBar p {
+    margin: 4px 0 0;
+    font-size: 13px;
+    color: #5b7cc8; /* más sutil */
+}
+
+/* ---------- ZONAS / SELECT ---------- */
+.zonaSelect {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    width: 100%;
+    padding: 8px 10px;
+    border-radius: 10px;
+    border: 1px solid #c5d8ff;
+    background: white;
+    font-size: 14px;
+    color: #2b4ea2;
+    box-shadow: 0 6px 20px rgba(0, 60, 160, 0.1);
+    display: none;
+    z-index: 20;
+}
+
+/* Mostrar select cuando el div tiene clase activo */
+.searchBarZona.activo .zonaSelect {
+    display: block;
+}
+
+/* ---------- BOTÓN BUSCAR ---------- */
+.btnBuscar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 12px 18px;
+    border-radius: 14px;
+    border: none;
+    background: linear-gradient(135deg, #4f7cff, #2b4ea2);
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+/* texto oculto por defecto */
+.btnBuscar .text {
+    max-width: 0;
+    opacity: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    transition: all 0.3s ease;
+}
+
+/* mostrar texto cuando se hace click o focus dentro del searchBar */
+.searchBar:focus-within .btnBuscar .text,
+.searchBar:active .btnBuscar .text {
+    max-width: 80px;
+    opacity: 1;
+}
+
+/* hover del botón */
+.btnBuscar:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(79, 124, 255, 0.25);
+}

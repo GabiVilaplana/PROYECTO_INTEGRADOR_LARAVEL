@@ -3,8 +3,35 @@
     <div class="logo-container">
         <img src="{{ asset('IMG/logo.png') }}" alt="TaskLink Logo" class="logo-icon">
     </div>
+    <div class="searchBar" tabindex="0">
+        <div class="searchBarZona" id="zonaToggle">
+            <h5>Zonas</h5>
+            <p id="zonaTexto">Buscar destinos</p>
 
-    <div class="right-header" tabindex="1">
+            <select id="zonaSelect" class="zonaSelect">
+                <option value="">Todas</option>
+                <option value="Valencia">Valencia</option>
+                <option value="Murcia">Murcia</option>
+                <option value="Madrid">Madrid</option>
+            </select>
+        </div>
+        <div class="searchBarDate">
+            <h5>Fechas</h5>
+            <p id="zonaFechas">Introduce las fechas</p>
+        </div>
+
+        <div class="searchBarServicio">
+            <h5>Servicio</h5>
+            <p id="zonaServicio">Añade un servicio</p>
+        </div>
+        <button class="btnBuscar">
+            <span class="icon-SearchBarBuscar">🔍</span>
+            <span class="text">Buscar</span>
+        </button>
+
+    </div>
+
+    <div class="right-header">
         @auth
             <span class="texto-servicios">{{ Auth::user()->name }}</span>
             <div class="icono-perfil">
@@ -29,7 +56,6 @@
                 <li class="divider">
                     <hr>
                 </li>
-                <!-- <li><a href="#"><span>🌐</span> Idiomas y moneda</a></li> -->
                 <li><a href="{{ route('ayuda') }}"><span>❓</span> Centro de ayuda</a></li>
                 <li class="divider">
                     <hr>
