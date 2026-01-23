@@ -110,3 +110,16 @@
 .carousel-btn.right {
     right: 0.5rem;
 }
+
+/* Disabled state */
+.carousel-btn.disabled,
+.carousel-btn[disabled] {
+    opacity: 0.45;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.carousel-track {
+    transform: translateZ(0);
+}
