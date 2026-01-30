@@ -38,6 +38,10 @@ class Servicio extends Model
     {
         return $this->hasMany(ServicioFoto::class, 'idServicio', 'IDServicio');
     }
+    public function fotoPrincipal()
+    {
+        return $this->hasOne(ServicioFoto::class, 'idServicio', 'IDServicio')->where('EsPrincipal', 1);
+    }
 
     // Valoraciones
     public function valoraciones()

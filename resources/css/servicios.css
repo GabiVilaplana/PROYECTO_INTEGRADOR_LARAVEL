@@ -1,0 +1,218 @@
+/* Contenedor general del carrusel */
+.carousel-wrapper {
+    position: relative;
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1.5rem;
+    overflow: hidden;
+}
+
+/* Título de categoría */
+.carousel-wrapper h2 {
+    text-align: center;
+    color: #1e40af;
+    font-size: 1.875rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    letter-spacing: -0.02em;
+}
+
+/* Track de desplazamiento de tarjetas */
+.carousel-track {
+    display: flex;
+    gap: 1rem;
+    padding: 1rem 0;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    transform: translateZ(0); /* mejora rendimiento en iOS */
+}
+
+/* Tarjeta completa: contenedor 3D */
+.course-completo {
+    width: 220px;
+    height: 360px;
+    perspective: 1000px; /* necesario para el flip */
+    flex-shrink: 0;
+    position: relative;
+}
+
+/* Contenedor interno para flip */
+.course-completo-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.6s;
+    transform-style: preserve-3d;
+}
+
+/* Flip al hacer hover */
+.course-completo:hover .course-completo-inner {
+    transform: rotateY(180deg);
+}
+
+/* Parte frontal */
+.course {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    backface-visibility: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Efecto hover de la frontal */
+.course-completo:hover .course {
+    transform: translateY(-6px);
+    box-shadow: 0 10px 24px rgba(30, 64, 175, 0.15);
+}
+
+/* Imagen del curso */
+.course img {
+    width: 100%;
+    height: 140px;
+    object-fit: cover;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+/* Título y descripción */
+.course h3 {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: #1e40af;
+    margin: 1rem 1rem 0.5rem;
+    line-height: 1.3;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.course p {
+    color: #4b5563;
+    font-size: 0.9375rem;
+    margin: 0 1rem 1rem;
+    line-height: 1.4;
+    flex-grow: 1;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Footer de precio */
+.course-footer {
+    margin: 0 1rem 0.75rem;
+    font-size: 0.875rem;
+    color: #1e40af;
+}
+
+/* Parte trasera */
+.course-trasera {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #f9fafb;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border-radius: 16px;
+    backface-visibility: hidden;
+    transform: rotateY(180deg);
+}
+
+/* Botones del carrusel */
+.carousel-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: white;
+    border: 2px solid #dbeafe;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    font-size: 1.25rem;
+    color: #1e40af;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.25s ease;
+    z-index: 10;
+}
+
+.carousel-btn:hover {
+    background: #eff6ff;
+    border-color: #93c5fd;
+    color: #1d4ed8;
+}
+
+.carousel-btn.left {
+    left: 0.5rem;
+}
+
+.carousel-btn.right {
+    right: 0.5rem;
+}
+
+.carousel-btn.disabled,
+.carousel-btn[disabled] {
+    opacity: 0.45;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+/* Botón de narración */
+.btn-narrar {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    background: #1e40af;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    font-size: 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 5;
+    transition: background 0.2s ease;
+}
+
+.btn-narrar:hover {
+    background: #2563eb;
+}
+
+/* Botones de la trasera */
+.btn-trasera,
+.btn-trasera-Comprar {
+    background: #1e40af;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 0.5rem;
+    margin-top: 0.5rem;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.btn-trasera:hover,
+.btn-trasera-Comprar:hover {
+    background: #2563eb;
+}
