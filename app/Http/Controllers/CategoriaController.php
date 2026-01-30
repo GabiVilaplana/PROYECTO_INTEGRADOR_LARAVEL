@@ -43,7 +43,7 @@ class CategoriaController extends Controller
         $data = $request->only(['Nombre', 'Descripcion', 'Color', 'Activa']);
 
         if ($request->hasFile('Imagen')) {
-            $path = $request->file('Imagen')->store('categorias', 'public');
+            $path = $request->file('Imagen')->store('categorias', 'storage');
             $data['Imagen'] = $path;
         } else {
             $data['Imagen'] = 'categorias/default.jpg'; // imagen por defecto
