@@ -23,19 +23,34 @@ class ChatbotApiController extends Controller
     // Consultar el estado de una reserva por el email del usuario
     public function consultarReserva(Request $request)
     {
-        $request->validate(['email' => 'required|email']);
+        // 1. Validar que recibimos el email
+        if (!$request->has('email')) {
+            return response()->json(['error' => 'No se proporcionó un email'], 400);
+        }
 
+        // 2. Buscar la reserva
+        // Usamos whereHas para buscar en la tabla 'usuarios' a través de la relación 'usuario'
         $reserva = Reserva::whereHas('usuario', function($query) use ($request) {
             $query->where('CorreoElectronico', $request->email);
         })
-        ->with('detalles.servicio')
-        ->latest()
+        ->with(['detalles.servicio', 'usuario']) // Cargamos también los datos del usuario
+        ->latest('FechaReserva')
         ->first();
 
         if (!$reserva) {
-            return response()->json(['message' => 'No se encontraron reservas.'], 404);
+            return response()->json(['message' => 'Lo siento, no he encontrado ninguna reserva para ese correo.'], 404);
         }
 
-        return response()->json($reserva);
+        // 3. Devolvemos una respuesta simplificada para que la IA no se líe
+        return response()->json([
+            'id' => $reserva->IDReserva,
+            'estado' => $reserva->Estado,
+            'fecha' => $reserva->FechaReserva,
+            'total' => $reserva->Total,
+            'usuario' => $reserva->usuario->Nombre,
+            'servicios' => $reserva->detalles->map(function($d) {
+                return $d->servicio->Nombre . ' (' . $d->HoraServicio . ')';
+            })
+        ]);
     }
 }
