@@ -10,7 +10,7 @@
         import { createChat } from 'https://cdn.jsdelivr.net/npm/@n8n/chat/dist/chat.bundle.es.js';
 
         createChat({
-            webhookUrl: 'http://localhost:5678/webhook/5a2850e5-267c-40bc-b03e-298857e06950/chat',
+            webhookUrl: 'http://localhost:5678/webhook/9cd9b4cb-4b47-4b5d-ab7b-f84a1b46e821/chat',
             showWelcomeScreen: true,
             title: '¡Hola! 👋',
             subtitle: 'Asistente de TaskLink. Estamos aquí para ayudarte 24/7.',
