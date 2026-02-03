@@ -9,7 +9,7 @@
 
 		@if($serviciosCategoria->isNotEmpty())
 			<div class="carousel-wrapper" id="carousel-{{ $categoria->IDCategoria }}">
-				<h2>{{ $categoria->Nombre }}</h2>
+				<h2>{{ $categoria->Nombre}}</h2>
 				<button class="carousel-btn left" aria-label="Anterior">‹</button>
 				<button class="carousel-btn right" aria-label="Siguiente">›</button>
 
@@ -17,8 +17,8 @@
 					@foreach($serviciosCategoria as $servicio)
 						@php
 							$imagen = $servicio->fotoPrincipal
-								? asset('storage/' . ltrim($servicio->fotoPrincipal->RutaFoto, '/'))
-								: asset('store/' . Str::slug($categoria->Nombre, '-') . '.jpg');
+								? asset('storage/categorias/' . ltrim(strtolower($categoria->Nombre) . '.jpg', '/'))
+								: asset('storage/' . ltrim($servicio->fotoPrincipal->RutaFoto, '/'));
 
 							$categoryClass = 'category-' . Str::slug($categoria->Nombre, '-');
 							$textoLectura = "Servicio de {$servicio->Nombre}. Descripción: {$servicio->Descripcion}. Precio: {$servicio->Precio} euros.";
