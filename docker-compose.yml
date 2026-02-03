@@ -69,9 +69,10 @@ services:
       PMA_USER: laravel
       PMA_PASSWORD: laravel
     ports:
-      - "8080:80"
+      - "8081:80"
     depends_on:
       - db
+
   vite:
     image: node:20-alpine
     container_name: vite
@@ -84,5 +85,24 @@ services:
     depends_on:
       - app
 
+  # NUEVO SERVICIO: n8n
+  n8n:
+    image: n8nio/n8n:latest
+    container_name: n8n
+    ports:
+      - "5678:5678"
+    environment:
+      - N8N_HOST=localhost
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=http
+      - WEBHOOK_URL=http://localhost:5678/
+      - N8N_METRICS=true
+    volumes:
+      - n8n_data:/home/node/.n8n
+    depends_on:
+      - app
+      - db
+
 volumes:
   db_data:
+  n8n_data: # Volumen para persistencia de datos de n8n
