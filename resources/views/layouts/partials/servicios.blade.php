@@ -17,7 +17,7 @@
 					@foreach($serviciosCategoria as $servicio)
 						@php
 							$imagen = $servicio->fotoPrincipal
-								? asset('storage/categorias/' . ltrim(strtolower($categoria->Nombre) . '.jpg', '/'))
+								? asset('storage/' . ltrim(strtolower($categoria->Imagen), '/'))
 								: asset('storage/' . ltrim($servicio->fotoPrincipal->RutaFoto, '/'));
 
 							$categoryClass = 'category-' . Str::slug($categoria->Nombre, '-');
