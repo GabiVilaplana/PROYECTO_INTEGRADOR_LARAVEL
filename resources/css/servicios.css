@@ -1,93 +1,100 @@
 /* Contenedor general del carrusel */
 .carousel-wrapper {
+    --carousel-btn-size: 48px;
+
     position: relative;
-    max-width: 1200px;
-    margin: 2rem auto;
-    padding: 0 1.5rem;
+    max-width: 1400px;
+    margin: 3rem auto;
+    padding: 0 2rem;
     overflow: hidden;
 }
 
 /* Título de categoría */
 .carousel-wrapper h2 {
     text-align: center;
-    color: #1e40af;
-    font-size: 1.875rem;
-    font-weight: 700;
-    margin-bottom: 1.5rem;
-    letter-spacing: -0.02em;
+    color: #1e3a8a;
+    font-size: 2rem;
+    font-weight: 800;
+    margin-bottom: 2rem;
+    letter-spacing: -0.025em;
+    line-height: 1.2;
+    font-family: 'Segoe UI', system-ui, sans-serif;
 }
 
-/* Track de desplazamiento de tarjetas */
+/* Track de desplazamiento */
 .carousel-track {
     display: flex;
-    gap: 1rem;
-    padding: 1rem 0;
+    gap: 1.75rem;
+    padding: 3rem 0;
+    margin-left: 4%;
+    margin-right: 4%;
+    padding-inline: calc(var(--carousel-btn-size) + 1rem);
     scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch;
-    transform: translateZ(0); /* mejora rendimiento en iOS */
+    transform: translateZ(0);
 }
 
-/* Tarjeta completa: contenedor 3D */
+/* Tarjeta completa con perspectiva */
 .course-completo {
-    width: 220px;
-    height: 360px;
-    perspective: 1000px; /* necesario para el flip */
+    width: 240px;
+    height: 380px;
+    perspective: 1200px;
     flex-shrink: 0;
     position: relative;
+    display: inline-block;
+    vertical-align: top;
 }
 
-/* Contenedor interno para flip */
 .course-completo-inner {
     position: relative;
     width: 100%;
     height: 100%;
-    transition: transform 0.6s;
+    transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     transform-style: preserve-3d;
+    transform-origin: center center;
+    will-change: transform;
+    /* pequeña mejora de composición para evitar flicker */
+    transform: translateZ(0.01px);
 }
 
-/* Flip al hacer hover */
-.course-completo:hover .course-completo-inner {
-    transform: rotateY(180deg);
+/* Activar flip solo en dispositivos con hover (escritorio) */
+@media (hover: hover) and (pointer: fine) {
+
+    .course-completo:hover .course-completo-inner,
+    .course-completo:focus-within .course-completo-inner {
+        transform: rotateY(180deg);
+    }
 }
 
-/* Parte frontal */
+/* Vista frontal */
 .course {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    inset: 0;
     background: white;
-    border-radius: 16px;
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+    border-radius: 20px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.07);
     overflow: hidden;
     display: flex;
     flex-direction: column;
     backface-visibility: hidden;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    -webkit-backface-visibility: hidden;
+    transition: all 0.35s ease;
+    transform-origin: center center;
 }
 
-/* Efecto hover de la frontal */
-.course-completo:hover .course {
-    transform: translateY(-6px);
-    box-shadow: 0 10px 24px rgba(30, 64, 175, 0.15);
-}
-
-/* Imagen del curso */
 .course img {
     width: 100%;
-    height: 140px;
+    height: 150px;
     object-fit: cover;
-    border-bottom: 1px solid #e5e7eb;
+    border-bottom: 1px solid #f1f5f9;
 }
 
-/* Título y descripción */
 .course h3 {
-    font-size: 1.125rem;
+    font-size: 1.25rem;
     font-weight: 700;
-    color: #1e40af;
-    margin: 1rem 1rem 0.5rem;
-    line-height: 1.3;
+    color: #1e3a8a;
+    margin: 1.125rem 1.25rem 0.625rem;
+    line-height: 1.35;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
@@ -96,10 +103,10 @@
 }
 
 .course p {
-    color: #4b5563;
-    font-size: 0.9375rem;
-    margin: 0 1rem 1rem;
-    line-height: 1.4;
+    color: #475569;
+    font-size: 0.95rem;
+    margin: 0 1.25rem 1.25rem;
+    line-height: 1.5;
     flex-grow: 1;
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -108,28 +115,124 @@
     text-overflow: ellipsis;
 }
 
-/* Footer de precio */
 .course-footer {
-    margin: 0 1rem 0.75rem;
-    font-size: 0.875rem;
-    color: #1e40af;
+    margin: 0 1.25rem 1rem;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #1d4ed8;
 }
 
-/* Parte trasera */
+/* Elevación visual al hover (solo en dispositivos con hover) */
+@media (hover: hover) and (pointer: fine) {
+    .course-completo:hover .course {
+        transform: translateY(-8px);
+        box-shadow: 0 12px 32px rgba(30, 64, 175, 0.18);
+    }
+}
+
+/* Botón narrar — dentro de .course */
+.btn-narrar {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: rgba(30, 64, 175, 0.12);
+    color: #1e40af;
+    border: none;
+    border-radius: 50%;
+    width: 38px;
+    height: 38px;
+    font-size: 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 5;
+    transition: all 0.25s ease;
+    backdrop-filter: blur(4px);
+}
+
+.btn-narrar:hover {
+    background: rgba(30, 64, 175, 0.2);
+    color: white;
+    transform: scale(1.08);
+}
+
+/* Vista trasera */
 .course-trasera {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: #f9fafb;
-    padding: 1rem;
+    inset: 0;
+    background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+    padding: 1.25rem;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    border-radius: 16px;
+    border-radius: 20px;
     backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
     transform: rotateY(180deg);
+    border: 1px solid #e2e8f0;
+    pointer-events: none;
+    /* evitar interacción hasta que esté visible */
+}
+
+/* Permitir interacción cuando esté visible (solo en dispositivos con hover) */
+@media (hover: hover) and (pointer: fine) {
+
+    .course-completo:hover .course-trasera,
+    .course-completo:focus-within .course-trasera {
+        pointer-events: auto;
+    }
+}
+
+.course-trasera h4 {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: #1e3a8a;
+    margin-bottom: 0.75rem;
+}
+
+.course-trasera p,
+.course-trasera .precio {
+    font-size: 0.95rem;
+    color: #334155;
+    margin: 0.375rem 0;
+    line-height: 1.5;
+}
+
+.course-trasera .precio {
+    font-weight: 700;
+    color: #1d4ed8;
+    font-size: 1.125rem;
+    margin-top: 0.75rem;
+}
+
+/* Botones traseros */
+.trasera-botones {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+.btn-trasera,
+.btn-trasera-Comprar {
+    background: #1e40af;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 0.625rem 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.25s ease, transform 0.2s ease;
+    text-align: center;
+    text-decoration: none;
+    font-size: 0.95rem;
+    box-shadow: 0 2px 6px rgba(30, 64, 175, 0.2);
+}
+
+.btn-trasera:hover,
+.btn-trasera-Comprar:hover {
+    background: #2563eb;
+    transform: translateY(-2px);
 }
 
 /* Botones del carrusel */
@@ -139,17 +242,17 @@
     transform: translateY(-50%);
     background: white;
     border: 2px solid #dbeafe;
-    width: 44px;
-    height: 44px;
+    width: 48px;
+    height: 48px;
     border-radius: 50%;
-    font-size: 1.25rem;
+    font-size: 1.375rem;
     color: #1e40af;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    transition: all 0.25s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    transition: all 0.3s cubic-bezier(0.2, 0, 0.2, 1);
     z-index: 10;
 }
 
@@ -157,62 +260,699 @@
     background: #eff6ff;
     border-color: #93c5fd;
     color: #1d4ed8;
+    transform: translateY(-50%) scale(1.05);
 }
 
 .carousel-btn.left {
-    left: 0.5rem;
+    left: 1rem;
 }
 
 .carousel-btn.right {
-    right: 0.5rem;
+    right: 1rem;
 }
 
 .carousel-btn.disabled,
 .carousel-btn[disabled] {
-    opacity: 0.45;
+    opacity: 0.4;
     cursor: not-allowed;
-    transform: none;
+    transform: translateY(-50%);
     box-shadow: none;
 }
 
-/* Botón de narración */
+/* Scroll snap por si lo quieres */
+.carousel-track {
+    scroll-snap-type: x mandatory;
+}
+
+.course-completo {
+    scroll-snap-align: start;
+}
+
+/* --- Responsive solicitadas y complementarias --- */
+
+/* <= 639px — móviles verticales */
+@media (max-width: 639px) {
+    .carousel-wrapper {
+        padding: 0 0.75rem;
+    }
+
+    .carousel-wrapper h2 {
+        font-size: 1.25rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .carousel-track {
+        gap: 0.75rem;
+        padding: 0.5rem 0;
+    }
+
+    .course-completo {
+        width: 92%;
+        height: auto;
+        margin-inline: 4%;
+    }
+
+    .course img {
+        height: 180px;
+    }
+
+    .course h3 {
+        font-size: 1rem;
+        margin: 0.75rem 0.75rem 0.5rem;
+    }
+
+    .course p {
+        -webkit-line-clamp: 3;
+    }
+
+    .carousel-btn {
+        display: none;
+    }
+
+    /* rely on swipe */
+    /* Desactivar transiciones de flip en táctil */
+    .course-completo-inner {
+        transition: none;
+        transform: none !important;
+    }
+}
+
+/* 640px – 1023px — móviles horizontal / tablets pequeñas */
+@media (min-width: 640px) and (max-width: 1023px) {
+    .carousel-wrapper {
+        padding: 0 1rem;
+    }
+
+    .carousel-wrapper h2 {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .carousel-track {
+        gap: 1rem;
+        padding: 0.75rem 0;
+    }
+
+    .course-completo {
+        width: 48%;
+        height: 320px;
+    }
+
+    /* A partir de 880px mostrar 3 columnas aproximadas */
+    @media (min-width: 880px) {
+        .course-completo {
+            width: 31.5%;
+        }
+    }
+
+    .course img {
+        height: 150px;
+    }
+
+    .carousel-btn {
+        width: 40px;
+        height: 40px;
+        display: flex;
+    }
+}
+
+/* >= 1537px — pantallas muy grandes (4K, ultrawide) */
+@media (min-width: 1537px) {
+    .carousel-wrapper {
+        max-width: 1600px;
+        margin-left: auto;
+        margin-right: auto;
+        padding: 0 3rem;
+    }
+
+    .carousel-wrapper h2 {
+        font-size: 2.25rem;
+    }
+
+    .carousel-track {
+        gap: 2rem;
+        padding: 1.25rem 0;
+    }
+
+    .course-completo {
+        width: 260px;
+        height: 380px;
+    }
+
+    .course img {
+        height: 170px;
+    }
+
+    .carousel-btn {
+        width: 56px;
+        height: 56px;
+        font-size: 1.5rem;
+    }
+
+    .carousel-btn.left {
+        left: 1.5rem;
+    }
+
+    .carousel-btn.right {
+        right: 1.5rem;
+    }
+}
+
+/* Compatibilidad: asegurar hover solo en dispositivos con pointer fino */
+@media (hover: hover) and (pointer: fine) {
+    .course-completo:hover .course-completo-inner {
+        transform: rotateY(180deg);
+    }
+}
+
+/* Ajustes para pantallas intermedias (antiguos breakpoints de compatibilidad) */
+@media (max-width: 768px) {
+    .carousel-wrapper {
+        padding: 0 1.25rem;
+        margin: 2rem auto;
+    }
+
+    .carousel-wrapper h2 {
+        font-size: 1.75rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .course-completo {
+        width: 220px;
+        height: 360px;
+    }
+
+    .course img {
+        height: 140px;
+    }
+}
+
+@media (max-width: 480px) {
+    .carousel-wrapper {
+        padding: 0 1rem;
+    }
+
+    .course-completo {
+        width: 200px;
+        height: 340px;
+    }
+
+    .carousel-btn {
+        width: 42px;
+        height: 42px;
+        font-size: 1.25rem;
+    }
+
+    .carousel-btn.left {
+        left: 0.75rem;
+    }
+
+    .carousel-btn.right {
+        right: 0.75rem;
+    }
+
+    .btn-narrar {
+        width: 34px;
+        height: 34px;
+        top: 0.75rem;
+        right: 0.75rem;
+    }
+}
+
+/* Contenedor general del carrusel */
+.carousel-wrapper {
+    position: relative;
+    max-width: 1400px;
+    margin: 3rem auto;
+    padding: 0 2rem;
+    overflow: hidden;
+}
+
+/* Título de categoría */
+.carousel-wrapper h2 {
+    text-align: center;
+    color: #1e3a8a;
+    font-size: 2rem;
+    font-weight: 800;
+    margin-bottom: 2rem;
+    letter-spacing: -0.025em;
+    line-height: 1.2;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+}
+
+/* Track de desplazamiento */
+.carousel-track {
+    display: flex;
+    gap: 1.75rem;
+    padding: 1.25rem 0;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    transform: translateZ(0);
+}
+
+/* Tarjeta completa con perspectiva */
+.course-completo {
+    width: 240px;
+    height: 380px;
+    perspective: 1200px;
+    flex-shrink: 0;
+    position: relative;
+    display: inline-block;
+    vertical-align: top;
+}
+
+.course-completo-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transform-style: preserve-3d;
+    transform-origin: center center;
+    will-change: transform;
+    /* pequeña mejora de composición para evitar flicker */
+    transform: translateZ(0.01px);
+}
+
+/* Activar flip solo en dispositivos con hover (escritorio) */
+@media (hover: hover) and (pointer: fine) {
+
+    .course-completo:hover .course-completo-inner,
+    .course-completo:focus-within .course-completo-inner {
+        transform: rotateY(180deg);
+    }
+}
+
+/* Vista frontal */
+.course {
+    position: absolute;
+    inset: 0;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.07);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    transition: all 0.35s ease;
+    transform-origin: center center;
+}
+
+.course img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.course h3 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #1e3a8a;
+    margin: 1.125rem 1.25rem 0.625rem;
+    line-height: 1.35;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.course p {
+    color: #475569;
+    font-size: 0.95rem;
+    margin: 0 1.25rem 1.25rem;
+    line-height: 1.5;
+    flex-grow: 1;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.course-footer {
+    margin: 0 1.25rem 1rem;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #1d4ed8;
+}
+
+/* Elevación visual al hover (solo en dispositivos con hover) */
+@media (hover: hover) and (pointer: fine) {
+    .course-completo:hover .course {
+        transform: translateY(-8px);
+        box-shadow: 0 12px 32px rgba(30, 64, 175, 0.18);
+    }
+}
+
+/* Botón narrar — dentro de .course */
 .btn-narrar {
     position: absolute;
-    top: 0.5rem;
-    right: 0.5rem;
-    background: #1e40af;
-    color: white;
+    top: 1rem;
+    right: 1rem;
+    background: rgba(30, 64, 175, 0.12);
+    color: #1e40af;
     border: none;
     border-radius: 50%;
-    width: 36px;
-    height: 36px;
+    width: 38px;
+    height: 38px;
     font-size: 1rem;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     z-index: 5;
-    transition: background 0.2s ease;
+    transition: all 0.25s ease;
+    backdrop-filter: blur(4px);
 }
 
 .btn-narrar:hover {
-    background: #2563eb;
+    background: rgba(30, 64, 175, 0.2);
+    color: white;
+    transform: scale(1.08);
 }
 
-/* Botones de la trasera */
+/* Vista trasera */
+.course-trasera {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border-radius: 20px;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    transform: rotateY(180deg);
+    border: 1px solid #e2e8f0;
+    pointer-events: none;
+    /* evitar interacción hasta que esté visible */
+}
+
+/* Permitir interacción cuando esté visible (solo en dispositivos con hover) */
+@media (hover: hover) and (pointer: fine) {
+
+    .course-completo:hover .course-trasera,
+    .course-completo:focus-within .course-trasera {
+        pointer-events: auto;
+    }
+}
+
+.course-trasera h4 {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: #1e3a8a;
+    margin-bottom: 0.75rem;
+}
+
+.course-trasera p,
+.course-trasera .precio {
+    font-size: 0.95rem;
+    color: #334155;
+    margin: 0.375rem 0;
+    line-height: 1.5;
+}
+
+.course-trasera .precio {
+    font-weight: 700;
+    color: #1d4ed8;
+    font-size: 1.125rem;
+    margin-top: 0.75rem;
+}
+
+/* Botones traseros */
+.trasera-botones {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
 .btn-trasera,
 .btn-trasera-Comprar {
     background: #1e40af;
     color: white;
     border: none;
-    border-radius: 8px;
-    padding: 0.5rem;
-    margin-top: 0.5rem;
+    border-radius: 10px;
+    padding: 0.625rem 1rem;
+    font-weight: 600;
     cursor: pointer;
-    transition: background 0.2s ease;
+    transition: background 0.25s ease, transform 0.2s ease;
+    text-align: center;
+    text-decoration: none;
+    font-size: 0.95rem;
+    box-shadow: 0 2px 6px rgba(30, 64, 175, 0.2);
+    display: block;
+
 }
 
 .btn-trasera:hover,
 .btn-trasera-Comprar:hover {
     background: #2563eb;
+    transform: translateY(-2px);
+}
+
+/* Botones del carrusel */
+.carousel-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: white;
+    border: 2px solid #dbeafe;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    font-size: 1.375rem;
+    color: #1e40af;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    transition: all 0.3s cubic-bezier(0.2, 0, 0.2, 1);
+    z-index: 10;
+}
+
+.carousel-btn:hover {
+    background: #eff6ff;
+    border-color: #93c5fd;
+    color: #1d4ed8;
+    transform: translateY(-50%) scale(1.05);
+}
+
+.carousel-btn.left {
+    left: 1rem;
+}
+
+.carousel-btn.right {
+    right: 1rem;
+}
+
+.carousel-btn.disabled,
+.carousel-btn[disabled] {
+    opacity: 0.4;
+    cursor: not-allowed;
+    transform: translateY(-50%);
+    box-shadow: none;
+}
+
+/* Scroll snap por si lo quieres */
+.carousel-track {
+    scroll-snap-type: x mandatory;
+}
+
+.course-completo {
+    scroll-snap-align: start;
+}
+
+/* --- Responsive solicitadas y complementarias --- */
+
+/* <= 639px — móviles verticales */
+@media (max-width: 639px) {
+    .carousel-wrapper {
+        padding: 0 0.75rem;
+    }
+
+    .carousel-wrapper h2 {
+        font-size: 1.25rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .carousel-track {
+        gap: 0.75rem;
+        padding: 0.5rem 0;
+    }
+
+    .course-completo {
+        width: 92%;
+        height: auto;
+        margin-inline: 4%;
+    }
+
+    .course img {
+        height: 180px;
+    }
+
+    .course h3 {
+        font-size: 1rem;
+        margin: 0.75rem 0.75rem 0.5rem;
+    }
+
+    .course p {
+        -webkit-line-clamp: 3;
+    }
+
+    .carousel-btn {
+        display: none;
+    }
+
+    /* rely on swipe */
+    /* Desactivar transiciones de flip en táctil */
+    .course-completo-inner {
+        transition: none;
+        transform: none !important;
+    }
+}
+
+/* 640px – 1023px — móviles horizontal / tablets pequeñas */
+@media (min-width: 640px) and (max-width: 1023px) {
+    .carousel-wrapper {
+        padding: 0 1rem;
+    }
+
+    .carousel-wrapper h2 {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .carousel-track {
+        gap: 1rem;
+        padding: 0.75rem 0;
+    }
+
+    .course-completo {
+        width: 48%;
+        height: 320px;
+    }
+
+    /* A partir de 880px mostrar 3 columnas aproximadas */
+    @media (min-width: 880px) {
+        .course-completo {
+            width: 31.5%;
+        }
+    }
+
+    .course img {
+        height: 150px;
+    }
+
+    .carousel-btn {
+        width: 40px;
+        height: 40px;
+        display: flex;
+    }
+}
+
+/* >= 1537px — pantallas muy grandes (4K, ultrawide) */
+@media (min-width: 1537px) {
+    .carousel-wrapper {
+        max-width: 1600px;
+        margin-left: auto;
+        margin-right: auto;
+        padding: 0 3rem;
+    }
+
+    .carousel-wrapper h2 {
+        font-size: 2.25rem;
+    }
+
+    .carousel-track {
+        gap: 2rem;
+        padding: 1.25rem 0;
+    }
+
+    .course-completo {
+        width: 260px;
+        height: 380px;
+    }
+
+    .course img {
+        height: 170px;
+    }
+
+    .carousel-btn {
+        width: 56px;
+        height: 56px;
+        font-size: 1.5rem;
+    }
+
+    .carousel-btn.left {
+        left: 1.5rem;
+    }
+
+    .carousel-btn.right {
+        right: 1.5rem;
+    }
+}
+
+/* Compatibilidad: asegurar hover solo en dispositivos con pointer fino */
+@media (hover: hover) and (pointer: fine) {
+    .course-completo:hover .course-completo-inner {
+        transform: rotateY(180deg);
+    }
+}
+
+/* Ajustes para pantallas intermedias (antiguos breakpoints de compatibilidad) */
+@media (max-width: 768px) {
+    .carousel-wrapper {
+        padding: 0 1.25rem;
+        margin: 2rem auto;
+    }
+
+    .carousel-wrapper h2 {
+        font-size: 1.75rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .course-completo {
+        width: 220px;
+        height: 360px;
+    }
+
+    .course img {
+        height: 140px;
+    }
+}
+
+@media (max-width: 480px) {
+    .carousel-wrapper {
+        padding: 0 1rem;
+    }
+
+    .course-completo {
+        width: 200px;
+        height: 340px;
+    }
+
+    .carousel-btn {
+        width: 42px;
+        height: 42px;
+        font-size: 1.25rem;
+    }
+
+    .carousel-btn.left {
+        left: 0.75rem;
+    }
+
+    .carousel-btn.right {
+        right: 0.75rem;
+    }
+
+    .btn-narrar {
+        width: 34px;
+        height: 34px;
+        top: 0.75rem;
+        right: 0.75rem;
+    }
 }
