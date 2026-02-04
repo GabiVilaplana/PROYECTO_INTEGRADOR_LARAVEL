@@ -10,7 +10,7 @@
         import { createChat } from 'https://cdn.jsdelivr.net/npm/@n8n/chat/dist/chat.bundle.es.js';
 
         createChat({
-            webhookUrl: 'http://localhost:5678/webhook/9cd9b4cb-4b47-4b5d-ab7b-f84a1b46e821/chat',
+            webhookUrl: 'http://localhost:5678/webhook/35fe1b02-f68f-4121-9dda-e00633f0e25a/chat',
             showWelcomeScreen: true,
             title: '¡Hola! 👋',
             subtitle: 'Asistente de TaskLink. Estamos aquí para ayudarte 24/7.',
@@ -25,7 +25,7 @@
                     subtitle: 'Asistente de TaskLink. Estamos para ayudarte 24/7.', // Esto corregirá el "Start a chat..."
                     inputPlaceholder: 'Escribe tu pregunta...',
                 }
-            }
+            },
         });
     </script>
     <!-- --- FIN CHATBOT N8N --- -->
