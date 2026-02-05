@@ -14,7 +14,6 @@ header {
     margin-bottom: 20px;
     gap: 10px;
     border: 1px solid lightgrey;
-
 }
 
 .logo-container {
@@ -42,14 +41,15 @@ header {
     vertical-align: middle;
     line-height: 80px;
 }
+
 .searchBar {
     display: flex;
     align-items: center;
     gap: 12px;
     padding: 12px 16px;
-    background: #fdfcff; /* tono muy sutil */
+    background: #fdfcff;
     border-radius: 20px;
-    box-shadow: 0 6px 15px rgba(0, 60, 160, 0.08); /* más ligero */
+    box-shadow: 0 6px 15px rgba(0, 60, 160, 0.08);
     max-width: 950px;
     flex: 1;
     transition: all 0.25s ease;
@@ -72,6 +72,11 @@ header {
     transition: all 0.25s ease;
 }
 
+/* Añadido: necesario para posicionamiento absoluto del dropdown */
+.searchBarZona {
+    position: relative;
+}
+
 .searchBarZona:hover,
 .searchBarDate:hover,
 .searchBarServicio:hover {
@@ -90,29 +95,56 @@ header {
 .searchBar p {
     margin: 4px 0 0;
     font-size: 13px;
-    color: #5b7cc8; /* más sutil */
+    color: #5b7cc8;
 }
 
-/* ---------- ZONAS / SELECT ---------- */
-.zonaSelect {
+/* ---------- INPUT DE BÚSQUEDA DE ZONAS (oculto por defecto) ---------- */
+#zonaInput {
+    margin-top: 8px;
+    padding: 8px 12px;
+    border: 1px solid #c5d8ff;
+    border-radius: 8px;
+    font-size: 13px;
+    color: #2b4ea2;
+    background: white;
+    width: 100%;
+    box-sizing: border-box;
+    display: none; /* oculto por defecto */
+}
+
+/* ---------- DROPDOWN DE SUGERENCIAS DE ZONAS ---------- */
+#zonaSuggestions {
     position: absolute;
-    top: calc(100% + 8px);
     left: 0;
     width: 100%;
-    padding: 8px 10px;
-    border-radius: 10px;
-    border: 1px solid #c5d8ff;
+    max-height: 200px;
+    overflow-y: auto;
     background: white;
-    font-size: 14px;
-    color: #2b4ea2;
+    border: 1px solid #c5d8ff;
+    border-top: none;
+    border-radius: 10px;
     box-shadow: 0 6px 20px rgba(0, 60, 160, 0.1);
-    display: none;
     z-index: 20;
+    display: none;
 }
 
-/* Mostrar select cuando el div tiene clase activo */
-.searchBarZona.activo .zonaSelect {
+/* Mostrar input y dropdown cuando .searchBarZona tiene la clase .focused */
+.searchBarZona.focused #zonaInput,
+.searchBarZona.focused #zonaSuggestions {
     display: block;
+}
+
+/* Estilo de cada opción en el dropdown */
+#zonaSuggestions > div {
+    padding: 10px 14px;
+    font-size: 13px;
+    color: #2b4ea2;
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+
+#zonaSuggestions > div:hover {
+    background-color: #f0f5ff;
 }
 
 /* ---------- BOTÓN BUSCAR ---------- */

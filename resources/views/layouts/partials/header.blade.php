@@ -5,18 +5,18 @@
             <img src="{{ asset('IMG/logo.png') }}" alt="TaskLink Logo" class="logo-icon">
         </a>
     </div>
+
     <div class="searchBar" tabindex="0">
         <div class="searchBarZona" id="zonaToggle">
             <h5>Zonas</h5>
             <p id="zonaTexto">Buscar destinos</p>
 
-            <select id="zonaSelect" class="zonaSelect">
-                <option value="">Todas</option>
-                <option value="Valencia">Valencia</option>
-                <option value="Murcia">Murcia</option>
-                <option value="Madrid">Madrid</option>
-            </select>
+            <input type="text" id="zonaInput" placeholder="Escribe una ciudad...">
+
+            <div id="zonaSuggestions">
+            </div>
         </div>
+
         <div class="searchBarDate">
             <h5>Fechas</h5>
             <p id="zonaFechas">Introduce las fechas</p>
@@ -26,11 +26,11 @@
             <h5>Servicio</h5>
             <p id="zonaServicio">Añade un servicio</p>
         </div>
+
         <button class="btnBuscar">
             <span class="icon-SearchBarBuscar">🔍</span>
             <span class="text">Buscar</span>
         </button>
-
     </div>
 
     <div class="right-header">
@@ -67,7 +67,7 @@
                         onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                         <span>➜</span> Cerrar sesión
                     </a>
-                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                    <form id="logout-form" action="{{ route('logout') }}" method="POST">
                         @csrf
                     </form>
                 </li>

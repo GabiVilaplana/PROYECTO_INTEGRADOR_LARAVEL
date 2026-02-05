@@ -1,11 +1,11 @@
-
 <body>
     @include('layouts.partials.header')
     <main>@yield('content')</main>
     @include('layouts.partials.footer')
 
-     <!-- --- INICIO CHATBOT N8N --- -->
+    <!-- --- INICIO CHATBOT N8N --- -->
     <link href="https://cdn.jsdelivr.net/npm/@n8n/chat/dist/style.css" rel="stylesheet" />
+
     <script type="module">
         import { createChat } from 'https://cdn.jsdelivr.net/npm/@n8n/chat/dist/chat.bundle.es.js';
 
@@ -21,12 +21,63 @@
             ],
             i18n: {
                 en: {
-                    title: '¡Hola! 👋', // Esto corregirá el "Hi there!"
-                    subtitle: 'Asistente de TaskLink. Estamos para ayudarte 24/7.', // Esto corregirá el "Start a chat..."
+                    title: '¡Hola! 👋',
+                    subtitle: 'Asistente de TaskLink. Estamos para ayudarte 24/7.',
                     inputPlaceholder: 'Escribe tu pregunta...',
                 }
             },
         });
     </script>
-    <!-- --- FIN CHATBOT N8N --- -->
+    <style>
+        #n8n-chat .chat-window-toggle {
+            background-color: #0ea5e9 !important;
+            /* Fondo azul */
+            border-radius: 50% !important;
+            width: 60px !important;
+            height: 60px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
+            cursor: pointer !important;
+        }
+
+        /* Ícono dentro del botón */
+        #n8n-chat .chat-window-toggle svg {
+            width: 32px !important;
+            height: 32px !important;
+            fill: white !important;
+            /* Color del ícono */
+        }
+
+        #n8n-chat .chat-window {
+            background-color: #f0f9ff !important;
+            border-radius: 16px !important;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+        }
+
+        #n8n-chat .chat-header {
+            background-color: #0ea5e9 !important;
+            color: white !important;
+        }
+
+        #n8n-chat .chat-header h1,
+        #n8n-chat .chat-header p {
+            color: white !important;
+        }
+
+        #n8n-chat .chat-body,
+        #n8n-chat .chat-footer {
+            background-color: #f0f9ff !important;
+        }
+
+        #n8n-chat .chat-input-send-button {
+            background-color: #0ea5e9 !important;
+            border: none !important;
+        }
+
+        #n8n-chat .chat-input-send-button:hover {
+            background-color: #0284c7 !important;
+        }
+    </style>
 </body>

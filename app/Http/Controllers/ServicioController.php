@@ -17,7 +17,7 @@ class ServicioController extends Controller
         $servicios = Servicio::with([
             'categoria',
             'proveedor',
-            'fotoPrincipal', // Relación que definimos en Servicio.php
+            'fotoPrincipal',
             'fotos'
         ])->where('Activo', true)->get();
 
@@ -37,7 +37,19 @@ class ServicioController extends Controller
             'valoraciones'
         ])->findOrFail($id);
 
-        return response()->json($servicio);
+        // 🔥 Lógica para determinar la imagen a mostrar
+        $rutaImagen = null;
+
+        if ($servicio->fotoPrincipal && $servicio->fotoPrincipal->RutaFoto) {
+            // Foto principal del servicio
+            $rutaImagen = asset('storage/' . ltrim($servicio->fotoPrincipal->RutaFoto, '/'));
+        } elseif ($servicio->categoria && $servicio->categoria->Imagen) {
+            // Imagen por defecto de la categoría (en minúsculas)
+            $nombreImagen = strtolower($servicio->categoria->Imagen);
+            $rutaImagen = asset('storage/' . ltrim($nombreImagen, '/'));
+        }
+
+        return view('servicios.show', compact('servicio', 'rutaImagen'));
     }
 
     /**
@@ -46,27 +58,33 @@ class ServicioController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'Nombre'        => 'required|string|max:255',
-            'Descripcion'   => 'required|string',
-            'Precio'        => 'required|numeric|min:0',
-            'Duracion'      => 'required|integer|min:1',
-            'idCategoria'   => 'required|exists:categorias,IDCategoria',
-            'idProveedor'   => 'required|exists:usuarios,IDUsuario',
-            'fotos'         => 'nullable|array',
-            'fotos.*'       => 'string',
-            'fotoPrincipal' => 'nullable|image|max:2048', // si suben archivo
+            'Nombre' => 'required|string|max:255',
+            'Descripcion' => 'required|string',
+            'Precio' => 'required|numeric|min:0',
+            'Duracion' => 'required|integer|min:1',
+            'idCategoria' => 'required|exists:categorias,IDCategoria',
+            'idProveedor' => 'required|exists:usuarios,IDUsuario',
+            'lat' => 'required|numeric',
+            'lng' => 'required|numeric',
+            'radio_km' => 'required|integer|min:1',
+            'fotos' => 'nullable|array',
+            'fotos.*' => 'string',
+            'fotoPrincipal' => 'nullable|image|max:2048',
         ]);
 
         DB::transaction(function () use ($request, &$servicio) {
 
             $servicio = Servicio::create([
-                'Nombre'       => $request->Nombre,
-                'Descripcion'  => $request->Descripcion,
-                'Precio'       => $request->Precio,
-                'Duracion'     => $request->Duracion,
-                'Activo'       => true,
-                'idCategoria'  => $request->idCategoria,
-                'idProveedor'  => $request->idProveedor,
+                'Nombre' => $request->Nombre,
+                'Descripcion' => $request->Descripcion,
+                'Precio' => $request->Precio,
+                'Duracion' => $request->Duracion,
+                'Activo' => true,
+                'idCategoria' => $request->idCategoria,
+                'idProveedor' => $request->idProveedor,
+                'lat' => $request->lat,
+                'lng' => $request->lng,
+                'radio_km' => $request->radio_km,
             ]);
 
             // ============================
@@ -76,26 +94,25 @@ class ServicioController extends Controller
                 $path = $request->file('fotoPrincipal')->store('servicios', 'public');
                 ServicioFoto::create([
                     'idServicio' => $servicio->IDServicio,
-                    'RutaFoto'   => $path,
-                    'EsPrincipal'=> true,
+                    'RutaFoto' => $path,
+                    'EsPrincipal' => true,
                 ]);
             } else {
-                // Usar imagen de la categoría si no hay foto subida
-                $categoria = $servicio->categoria; // cargamos relación
+                $categoria = $servicio->categoria;
                 ServicioFoto::create([
                     'idServicio' => $servicio->IDServicio,
-                    'RutaFoto'   => 'categorias/' . $categoria->Nombre . '.jpg',
-                    'EsPrincipal'=> true,
+                    'RutaFoto' => 'categorias/' . $categoria->Nombre . '.jpg',
+                    'EsPrincipal' => true,
                 ]);
             }
 
-            // Guardar fotos adicionales si vienen
+            // Guardar fotos adicionales
             if ($request->filled('fotos')) {
                 foreach ($request->fotos as $ruta) {
                     ServicioFoto::create([
                         'idServicio' => $servicio->IDServicio,
-                        'RutaFoto'   => $ruta,
-                        'EsPrincipal'=> false,
+                        'RutaFoto' => $ruta,
+                        'EsPrincipal' => false,
                     ]);
                 }
             }
@@ -115,12 +132,15 @@ class ServicioController extends Controller
         $servicio = Servicio::findOrFail($id);
 
         $request->validate([
-            'Nombre'      => 'sometimes|string|max:255',
+            'Nombre' => 'sometimes|string|max:255',
             'Descripcion' => 'sometimes|string',
-            'Precio'      => 'sometimes|numeric|min:0',
-            'Duracion'    => 'sometimes|integer|min:1',
-            'Activo'      => 'sometimes|boolean',
+            'Precio' => 'sometimes|numeric|min:0',
+            'Duracion' => 'sometimes|integer|min:1',
+            'Activo' => 'sometimes|boolean',
             'idCategoria' => 'sometimes|exists:categorias,IDCategoria',
+            'lat' => 'sometimes|numeric',
+            'lng' => 'sometimes|numeric',
+            'radio_km' => 'sometimes|integer|min:1',
             'fotoPrincipal' => 'nullable|image|max:2048',
         ]);
 
@@ -133,32 +153,28 @@ class ServicioController extends Controller
                 'Duracion',
                 'Activo',
                 'idCategoria',
+                'lat',
+                'lng',
+                'radio_km',
             ]));
 
-            // ============================
             // Actualizar o agregar foto principal
-            // ============================
             if ($request->hasFile('fotoPrincipal')) {
-                // Borramos foto principal anterior
                 $servicio->fotoPrincipal()->delete();
-
-                // Guardamos nueva
                 $path = $request->file('fotoPrincipal')->store('servicios', 'public');
                 ServicioFoto::create([
                     'idServicio' => $servicio->IDServicio,
-                    'RutaFoto'   => $path,
-                    'EsPrincipal'=> true,
+                    'RutaFoto' => $path,
+                    'EsPrincipal' => true,
                 ]);
             } elseif (!$servicio->fotoPrincipal) {
-                // Si no hay foto principal, usar imagen de categoría
                 $categoria = $servicio->categoria;
                 ServicioFoto::create([
                     'idServicio' => $servicio->IDServicio,
-                    'RutaFoto'   => 'categorias/' . $categoria->Nombre . '.jpg',
-                    'EsPrincipal'=> true,
+                    'RutaFoto' => 'categorias/' . $categoria->Nombre . '.jpg',
+                    'EsPrincipal' => true,
                 ]);
             }
-
         });
 
         return response()->json([
@@ -166,6 +182,10 @@ class ServicioController extends Controller
             'servicio' => $servicio->load('fotoPrincipal', 'fotos')
         ]);
     }
+
+    /**
+     * Eliminar servicio y sus fotos
+     */
     public function destroy($id)
     {
         $servicio = Servicio::findOrFail($id);
@@ -178,5 +198,35 @@ class ServicioController extends Controller
         return response()->json([
             'message' => 'Servicio eliminado correctamente'
         ]);
+    }
+
+    /**
+     * Buscar servicios por proximidad (tipo Airbnb)
+     */
+    public function buscar(Request $request)
+    {
+        $request->validate([
+            'lat' => 'required|numeric',
+            'lng' => 'required|numeric',
+        ]);
+
+        $lat = $request->lat;
+        $lng = $request->lng;
+
+        $servicios = Servicio::selectRaw("
+            *,
+            (6371 * acos(
+                cos(radians(?))
+                * cos(radians(lat))
+                * cos(radians(lng) - radians(?))
+                + sin(radians(?)) * sin(radians(lat))
+            )) AS distancia
+        ", [$lat, $lng, $lat])
+            ->having('distancia', '<=', DB::raw('radio_km'))
+            ->orderBy('distancia')
+            ->with(['categoria', 'proveedor', 'fotoPrincipal'])
+            ->get();
+
+        return response()->json($servicios);
     }
 }

@@ -1,10 +1,8 @@
 /* Contenedor general del carrusel */
 .carousel-wrapper {
     --carousel-btn-size: 48px;
-
     position: relative;
     max-width: 1400px;
-    margin: 3rem auto;
     padding: 0 2rem;
     overflow: hidden;
 }
@@ -429,7 +427,6 @@
 @media (max-width: 768px) {
     .carousel-wrapper {
         padding: 0 1.25rem;
-        margin: 2rem auto;
     }
 
     .carousel-wrapper h2 {
@@ -483,9 +480,10 @@
 .carousel-wrapper {
     position: relative;
     max-width: 1400px;
-    margin: 3rem auto;
     padding: 0 2rem;
     overflow: hidden;
+    background-color:#cce6ff75;
+    border-radius:22px;
 }
 
 /* Título de categoría */
@@ -907,7 +905,6 @@
 @media (max-width: 768px) {
     .carousel-wrapper {
         padding: 0 1.25rem;
-        margin: 2rem auto;
     }
 
     .carousel-wrapper h2 {

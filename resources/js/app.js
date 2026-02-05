@@ -3,6 +3,7 @@ import '../css/footer.css';
 import '../css/hero.css';
 import '../css/categorias.css';
 import '../css/servicios.css';
+import './zonas';
 import './bootstrap';
 import './carrousel'; 
 

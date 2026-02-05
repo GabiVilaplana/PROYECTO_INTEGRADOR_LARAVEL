@@ -19,37 +19,36 @@ class Servicio extends Model
         'Activo',
         'idCategoria',
         'idProveedor',
+        'lat',
+        'lng',
+        'radio_km',
     ];
 
-    // Relación con categoría
     public function categoria()
     {
         return $this->belongsTo(Categoria::class, 'idCategoria', 'IDCategoria');
     }
 
-    // Relación con proveedor (usuario)
     public function proveedor()
     {
         return $this->belongsTo(Usuario::class, 'idProveedor', 'IDUsuario');
     }
 
-    // Fotos del servicio
     public function fotos()
     {
         return $this->hasMany(ServicioFoto::class, 'idServicio', 'IDServicio');
     }
+
     public function fotoPrincipal()
     {
         return $this->hasOne(ServicioFoto::class, 'idServicio', 'IDServicio')->where('EsPrincipal', 1);
     }
 
-    // Valoraciones
     public function valoraciones()
     {
         return $this->hasMany(ValoracionServicio::class, 'idServicio', 'IDServicio');
     }
 
-    // Reservas
     public function reservaDetalles()
     {
         return $this->hasMany(ReservaDetalle::class, 'idServicio', 'IDServicio');
