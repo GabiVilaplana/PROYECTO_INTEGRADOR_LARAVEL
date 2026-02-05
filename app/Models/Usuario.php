@@ -18,6 +18,7 @@ class Usuario extends Authenticatable
         'Password',
         'idRol',
         'Activo',
+        'FotoPerfil',
     ];
 
     // Relación con rol
@@ -67,5 +68,12 @@ class Usuario extends Authenticatable
     public function getNameAttribute()
     {
         return $this->Nombre . ' ' . $this->Apellidos;
+    }
+    public function getFotoPerfilUrlAttribute()
+    {
+        if ($this->FotoPerfil) {
+            return asset('storage/' . ltrim($this->FotoPerfil, '/'));
+        }
+        return asset('IMG/imagenPerfilRedonda.png');
     }
 }

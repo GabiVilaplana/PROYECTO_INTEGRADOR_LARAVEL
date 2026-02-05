@@ -22,6 +22,7 @@ class UsuarioFactory extends Factory
             'Password' => bcrypt('password'),
             'idRol' => $rolUsuario,
             'Activo' => $this->faker->boolean(90),
+            'FotoPerfil' => 'perfiles/default.jpg',
         ];
     }
 }

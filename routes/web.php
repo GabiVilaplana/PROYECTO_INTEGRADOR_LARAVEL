@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ServicioController;
+use App\Http\Controllers\ValoracionServicioController;
 use App\Models\Categoria;
 use App\Models\Servicio;
 use Illuminate\Support\Facades\Route;
@@ -27,6 +28,9 @@ Route::middleware('auth')->group(function () {
 Route::get('/servicios/{id}', [ServicioController::class, 'show'])->name('servicios.show');
 Route::get('/compra-temporal', function () {
     return '<h1>Página temporal de compra</h1>';
+});
+Route::middleware('auth')->group(function () {
+    Route::post('/valoraciones', [ValoracionServicioController::class, 'store'])->name('valoraciones.store');
 });
 
 

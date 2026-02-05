@@ -34,22 +34,30 @@ class ServicioController extends Controller
             'proveedor',
             'fotos',
             'fotoPrincipal',
-            'valoraciones'
+            'valoraciones.usuario' // Carga las valoraciones + el usuario que las hizo
         ])->findOrFail($id);
 
-        // 🔥 Lógica para determinar la imagen a mostrar
-        $rutaImagen = null;
+        // 🔥 Calculamos media y total de reseñas
+        $valoraciones = $servicio->valoraciones;
+        $total_resenas = $valoraciones->count();
+        $media = $total_resenas > 0 ? round($valoraciones->avg('Puntuacion'), 1) : 0;
 
+        // Lógica para imagen
+        $rutaImagen = null;
         if ($servicio->fotoPrincipal && $servicio->fotoPrincipal->RutaFoto) {
-            // Foto principal del servicio
             $rutaImagen = asset('storage/' . ltrim($servicio->fotoPrincipal->RutaFoto, '/'));
         } elseif ($servicio->categoria && $servicio->categoria->Imagen) {
-            // Imagen por defecto de la categoría (en minúsculas)
             $nombreImagen = strtolower($servicio->categoria->Imagen);
             $rutaImagen = asset('storage/' . ltrim($nombreImagen, '/'));
         }
 
-        return view('servicios.show', compact('servicio', 'rutaImagen'));
+        // ✅ Pasamos TODAS las variables necesarias a la vista
+        return view('servicios.show', compact(
+            'servicio',
+            'rutaImagen',
+            'media',
+            'total_resenas'
+        ));
     }
 
     /**
