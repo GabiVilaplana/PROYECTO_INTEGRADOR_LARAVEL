@@ -41,13 +41,14 @@ class LoginRequest extends FormRequest
     {
         $this->ensureIsNotRateLimited();
 
-        // Usamos los nombres reales de las columnas en la base de datos
         $credentials = [
             'CorreoElectronico' => $this->input('email'),
-            'Password' => $this->input('password'),
+            'password' => $this->input('password'),
+            'Activo' => true,
         ];
 
-        if (! Auth::attempt($credentials, $this->boolean('remember'))) {
+        // Intento de login usando email y password separados
+        if (!Auth::guard('web')->attempt($credentials, $this->boolean('remember'))) {
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([
@@ -58,6 +59,9 @@ class LoginRequest extends FormRequest
         RateLimiter::clear($this->throttleKey());
     }
 
+
+
+
     /**
      * Ensure the login request is not rate limited.
      *
@@ -65,7 +69,7 @@ class LoginRequest extends FormRequest
      */
     public function ensureIsNotRateLimited(): void
     {
-        if (! RateLimiter::tooManyAttempts($this->throttleKey(), 5)) {
+        if (!RateLimiter::tooManyAttempts($this->throttleKey(), 5)) {
             return;
         }
 

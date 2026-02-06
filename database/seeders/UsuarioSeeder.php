@@ -15,7 +15,7 @@ class UsuarioSeeder extends Seeder
             'Nombre' => 'Admin',
             'Apellidos' => 'admin',
             'CorreoElectronico' => 'admin@admin.com',
-            'Password' => bcrypt('admin123'),
+            'password' => bcrypt('admin123'),
             'idRol' => Rol::where('Nombre', 'admin')->first()->IDRol,
             'Activo' => true,
         ]);
@@ -25,7 +25,7 @@ class UsuarioSeeder extends Seeder
             'Nombre' => 'Alex',
             'Apellidos' => 'Lopez',
             'CorreoElectronico' => 'alexlopez@tasklink.com',
-            'Password' => bcrypt('alexlopez1234'),
+            'password' => bcrypt('alexlopez1234'),
             'idRol' => Rol::where('Nombre', 'admin')->first()->IDRol,
             'Activo' => true,
         ]);
@@ -33,7 +33,7 @@ class UsuarioSeeder extends Seeder
             'Nombre' => 'Gabi',
             'Apellidos' => 'Vilaplana',
             'CorreoElectronico' => 'gabivilaplana@tasklink.com',
-            'Password' => bcrypt('gabivilaplana1234'),
+            'password' => bcrypt('gabivilaplana1234'),
             'idRol' => Rol::where('Nombre', 'admin')->first()->IDRol,
             'Activo' => true,
         ]);
@@ -41,7 +41,7 @@ class UsuarioSeeder extends Seeder
             'Nombre' => 'Andres',
             'Apellidos' => 'Prueba',
             'CorreoElectronico' => 'andresprueba@gmail.com',
-            'Password' => bcrypt('andresprueba1234'),
+            'password' => bcrypt('andresprueba1234'),
             'idRol' => Rol::where('Nombre', 'usuario')->first()->IDRol,
             'Activo' => true,
         ]);
@@ -49,7 +49,7 @@ class UsuarioSeeder extends Seeder
             'Nombre' => 'Andres',
             'Apellidos' => 'Lopez',
             'CorreoElectronico' => 'andreslopez@gmail.com',
-            'Password' => bcrypt('andreslopez1234'),
+            'password' => bcrypt('andreslopez1234'),
             'idRol' => Rol::where('Nombre', 'creadorServicio')->first()->IDRol,
             'Activo' => true,
         ]);

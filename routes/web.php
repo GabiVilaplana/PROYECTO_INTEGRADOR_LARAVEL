@@ -13,8 +13,8 @@ Route::get('/', function () {
         ->get();
     $categorias = Categoria::where('Activa', true)->get();
     return view('index', compact('categorias', 'servicios'));
+})->name('home');
 
-});
 
 Route::get('/dashboard', function () {
     return view('dashboard');

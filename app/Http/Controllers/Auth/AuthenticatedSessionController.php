@@ -16,20 +16,20 @@ class AuthenticatedSessionController extends Controller
      */
     public function create(): View
     {
-        return view('auth.login');
+        return view('auth.loginPropio');
     }
 
     /**
      * Handle an incoming authentication request.
      */
-    public function store(LoginRequest $request): RedirectResponse
+    public function store(LoginRequest $request)
     {
-        $request->authenticate();
+        $request->authenticate();        // Valida y autentica
+        $request->session()->regenerate(); // Previene session fixation
 
-        $request->session()->regenerate();
-
-        return redirect()->intended(route('dashboard', absolute: false));
+        return redirect()->intended(route('home')); // Redirige a la ruta home
     }
+
 
     /**
      * Destroy an authenticated session.
@@ -42,6 +42,16 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerateToken();
 
-        return redirect('/');
+        return redirect()->intended(route('home'));
+
+    }
+
+    protected function credentials(Request $request)
+    {
+        return [
+            'CorreoElectronico' => $request->email,
+            'Password' => $request->password,
+            'Activo' => true,
+        ];
     }
 }

@@ -4,6 +4,10 @@ document.addEventListener('DOMContentLoaded', function () {
     const zonaInput = document.getElementById('zonaInput');
     const zonaSuggestions = document.getElementById('zonaSuggestions');
 
+    if (!zonaToggle || !zonaTexto || !zonaInput || !zonaSuggestions) {
+        return;
+    }
+
     let zonasCache = null; // Cache para no llamar a la API cada vez
 
     // 1. Al hacer clic en el contenedor
@@ -38,7 +42,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!query) {
             renderSuggestions(zonasCache.slice(0, 10));
         } else {
-            const filtered = zonasCache.filter(z => 
+            const filtered = zonasCache.filter(z =>
                 z.nombre.toLowerCase().includes(query)
             ).slice(0, 10);
             renderSuggestions(filtered);

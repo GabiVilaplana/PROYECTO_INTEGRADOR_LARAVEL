@@ -12,7 +12,7 @@ return new class extends Migration {
             $table->string('Nombre');
             $table->string('Apellidos')->nullable();
             $table->string('CorreoElectronico')->unique();
-            $table->string('Password');
+            $table->string('password');
             $table->foreignId('idRol')->constrained('rols','IDRol')->onDelete('cascade');
             $table->boolean('Activo')->default(true);
             $table->timestamps();
