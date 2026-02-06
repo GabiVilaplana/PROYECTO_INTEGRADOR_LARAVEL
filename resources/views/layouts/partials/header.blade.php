@@ -37,7 +37,7 @@
         @auth
             <span class="texto-servicios">{{ Auth::user()->name }}</span>
             <div class="icono-perfil">
-                <img src="{{ asset('IMG/imagenPerfilRedonda.png') }}" class="profile-icon">
+                <img src="{{ Auth::user()->foto_perfil_url }}" class="profile-icon">
             </div>
         @else
             <span class="texto-servicios"><a href="{{ route('login') }}">Iniciar Sesión</a></span>
@@ -48,6 +48,27 @@
         <div id="user-dropdown" class="user-dropdown">
             <ul class="dropdown-menu">
                 <h2>Mi cuenta</h2>
+                <div class="dropdown-user-info">
+                    <form action="{{ route('perfil.foto.actualizar') }}" method="POST" enctype="multipart/form-data"
+                        style="display: inline;">
+                        @csrf
+                        <label for="foto_perfil_input" style="cursor: pointer;">
+                            <img src="{{ Auth::user()->foto_perfil_url }}" class="profile-dropdown-icon"
+                                alt="Foto de perfil">
+                        </label>
+                        <input type="file" id="foto_perfil_input" name="foto_perfil" accept="image/*" style="display: none;"
+                            onchange="this.form.submit()">
+                    </form>
+                    @if(session('foto_actualizada'))
+                        <div class="alerta-foto-exito">
+                            ✅ ¡Foto actualizada!
+                        </div>
+                    @endif
+                    <div>
+                        <p><strong>! Hola, {{ Auth::user()->name }} ¡</strong></p>
+                    </div>
+                </div>
+
                 <li class="divider">
                     <hr>
                 </li>

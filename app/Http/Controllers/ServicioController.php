@@ -237,4 +237,9 @@ class ServicioController extends Controller
 
         return response()->json($servicios);
     }
+    public function create()
+    {
+        $categorias = \App\Models\Categoria::where('Activa', true)->get();
+        return view('servicios.create', compact('categorias'));
+    }
 }

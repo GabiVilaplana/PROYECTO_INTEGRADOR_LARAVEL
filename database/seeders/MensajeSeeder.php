@@ -18,7 +18,7 @@ class MensajeSeeder extends Seeder
             Mensaje::create([
                 'idUsuario' => $usuario->IDUsuario,
                 'Nombre' => $usuario->Nombre.' '.$usuario->Apellidos,
-                'Email' => $usuario->CorreoElectronico,
+                'Email' => $usuario->email,
                 'Asunto' => 'Consulta sobre servicio',
                 'Contenido' => 'Hola, quisiera más información sobre uno de sus servicios.',
                 'Estado' => 'pendiente',

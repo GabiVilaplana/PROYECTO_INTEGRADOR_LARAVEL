@@ -14,8 +14,8 @@ class UsuarioSeeder extends Seeder
         Usuario::create([
             'Nombre' => 'Admin',
             'Apellidos' => 'admin',
-            'CorreoElectronico' => 'admin@admin.com',
-            'password' => bcrypt('admin123'),
+            'email' => 'admin@admin.com',
+            'password' => 'admin123',
             'idRol' => Rol::where('Nombre', 'admin')->first()->IDRol,
             'Activo' => true,
         ]);
@@ -24,32 +24,32 @@ class UsuarioSeeder extends Seeder
         Usuario::create([
             'Nombre' => 'Alex',
             'Apellidos' => 'Lopez',
-            'CorreoElectronico' => 'alexlopez@tasklink.com',
-            'password' => bcrypt('alexlopez1234'),
+            'email' => 'alexlopez@tasklink.com',
+            'password' => 'alexlopez1234',
             'idRol' => Rol::where('Nombre', 'admin')->first()->IDRol,
             'Activo' => true,
         ]);
         Usuario::create([
             'Nombre' => 'Gabi',
             'Apellidos' => 'Vilaplana',
-            'CorreoElectronico' => 'gabivilaplana@tasklink.com',
-            'password' => bcrypt('gabivilaplana1234'),
+            'email' => 'gabivilaplana@tasklink.com',
+            'password' => 'gabivilaplana1234',
             'idRol' => Rol::where('Nombre', 'admin')->first()->IDRol,
             'Activo' => true,
         ]);
         Usuario::create([
             'Nombre' => 'Andres',
             'Apellidos' => 'Prueba',
-            'CorreoElectronico' => 'andresprueba@gmail.com',
-            'password' => bcrypt('andresprueba1234'),
+            'email' => 'andresprueba@gmail.com',
+            'password' => 'andresprueba1234',
             'idRol' => Rol::where('Nombre', 'usuario')->first()->IDRol,
             'Activo' => true,
         ]);
         Usuario::create([
             'Nombre' => 'Andres',
             'Apellidos' => 'Lopez',
-            'CorreoElectronico' => 'andreslopez@gmail.com',
-            'password' => bcrypt('andreslopez1234'),
+            'email' => 'andreslopez@gmail.com',
+            'password' => 'andreslopez1234',
             'idRol' => Rol::where('Nombre', 'creadorServicio')->first()->IDRol,
             'Activo' => true,
         ]);

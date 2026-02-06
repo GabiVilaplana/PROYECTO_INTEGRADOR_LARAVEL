@@ -14,7 +14,7 @@ class Usuario extends Authenticatable
     protected $fillable = [
         'Nombre',
         'Apellidos',
-        'CorreoElectronico',
+        'email',
         'password',  // ¡esta es la columna real!
         'idRol',
         'Activo',
@@ -22,28 +22,25 @@ class Usuario extends Authenticatable
     ];
 
     // Relaciones
-    public function rol() { return $this->belongsTo(Rol::class, 'idRol', 'IDRol'); }
-    public function servicios() { return $this->hasMany(Servicio::class, 'idProveedor', 'IDUsuario'); }
-    public function reservas() { return $this->hasMany(Reserva::class, 'idUsuario', 'IDUsuario'); }
-    public function valoraciones() { return $this->hasMany(ValoracionServicio::class, 'idUsuario', 'IDUsuario'); }
-    public function mensajes() { return $this->hasMany(Mensaje::class, 'idUsuario', 'IDUsuario'); }
-
-    // Sobrescribir email
-    public function getEmailAttribute()
+    public function rol()
     {
-        return $this->attributes['CorreoElectronico'];
+        return $this->belongsTo(Rol::class, 'idRol', 'IDRol');
     }
-
-    // Sobrescribir password para hacer bcrypt automáticamente
-    public function setPasswordAttribute($value)
+    public function servicios()
     {
-        $this->attributes['password'] = bcrypt($value);
+        return $this->hasMany(Servicio::class, 'idProveedor', 'IDUsuario');
     }
-
-    // Laravel usa este método para verificar la contraseña
-    public function getAuthPassword(): string
+    public function reservas()
     {
-        return $this->attributes['password'];
+        return $this->hasMany(Reserva::class, 'idUsuario', 'IDUsuario');
+    }
+    public function valoraciones()
+    {
+        return $this->hasMany(ValoracionServicio::class, 'idUsuario', 'IDUsuario');
+    }
+    public function mensajes()
+    {
+        return $this->hasMany(Mensaje::class, 'idUsuario', 'IDUsuario');
     }
 
     // Nombre completo
@@ -58,12 +55,10 @@ class Usuario extends Authenticatable
         if ($this->FotoPerfil) {
             return asset('storage/' . ltrim($this->FotoPerfil, '/'));
         }
-        return asset('IMG/imagenPerfilRedonda.png');
+        return asset('storage/perfiles/default.jpg');
     }
-
-    // Login con CorreoElectronico
-    public function getAuthIdentifierName(): string
+    public function setPasswordAttribute($value)
     {
-        return 'CorreoElectronico';
+        $this->attributes['password'] = bcrypt($value);
     }
 }

@@ -49,7 +49,7 @@ class AuthenticatedSessionController extends Controller
     protected function credentials(Request $request)
     {
         return [
-            'CorreoElectronico' => $request->email,
+            'email' => $request->email,
             'Password' => $request->password,
             'Activo' => true,
         ];

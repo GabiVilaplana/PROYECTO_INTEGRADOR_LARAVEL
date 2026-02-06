@@ -17,7 +17,7 @@ class MensajeFactory extends Factory
         return [
             'idUsuario' => $usuario->IDUsuario,
             'Nombre' => $usuario->Nombre.' '.$usuario->Apellidos,
-            'Email' => $usuario->CorreoElectronico,
+            'Email' => $usuario->email,
             'Asunto' => $this->faker->sentence(4),
             'Contenido' => $this->faker->paragraph(),
             'Estado' => $this->faker->randomElement(['pendiente','leido','respondido']),

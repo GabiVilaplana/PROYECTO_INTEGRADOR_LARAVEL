@@ -290,7 +290,7 @@
                         @php
                             $fotoUrl = $servicio->proveedor && $servicio->proveedor->FotoPerfil
                                 ? asset('storage/' . ltrim($servicio->proveedor->FotoPerfil, '/'))
-                                : null;
+                                : asset('storage/perfiles/default.jpg');
                         @endphp
 
                         @if($fotoUrl)

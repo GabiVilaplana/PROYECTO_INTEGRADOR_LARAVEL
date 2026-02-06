@@ -81,7 +81,7 @@
             <div class="px-4">
                 @auth
                     <div class="font-medium text-base text-gray-800 dark:text-gray-200">{{ Auth::user()->name }}</div>
-                    <div class="font-medium text-sm text-gray-500">{{ Auth::user()->CorreoElectronico }}</div>
+                    <div class="font-medium text-sm text-gray-500">{{ Auth::user()->email }}</div>
                 @else
                     <div class="font-medium text-base text-gray-800 dark:text-gray-200">Invitado</div>
                 @endauth

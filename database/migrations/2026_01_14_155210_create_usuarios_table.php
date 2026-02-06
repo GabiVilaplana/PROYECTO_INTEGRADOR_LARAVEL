@@ -11,7 +11,7 @@ return new class extends Migration {
             $table->id('IDUsuario');
             $table->string('Nombre');
             $table->string('Apellidos')->nullable();
-            $table->string('CorreoElectronico')->unique();
+            $table->string('email')->unique();
             $table->string('password');
             $table->foreignId('idRol')->constrained('rols','IDRol')->onDelete('cascade');
             $table->boolean('Activo')->default(true);

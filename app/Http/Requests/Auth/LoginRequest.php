@@ -41,18 +41,23 @@ class LoginRequest extends FormRequest
     {
         $this->ensureIsNotRateLimited();
 
-        $credentials = [
-            'CorreoElectronico' => $this->input('email'),
-            'password' => $this->input('password'),
-            'Activo' => true,
-        ];
-
-        // Intento de login usando email y password separados
-        if (!Auth::guard('web')->attempt($credentials, $this->boolean('remember'))) {
+        // Solo email y password
+        if (!Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([
                 'email' => trans('auth.failed'),
+            ]);
+        }
+
+        // Verificar que el usuario esté activo
+        if (!auth()->user()->Activo) {
+            Auth::logout();
+            $this->session()->invalidate();
+            $this->session()->regenerateToken();
+
+            throw ValidationException::withMessages([
+                'email' => 'Tu cuenta no está activa.',
             ]);
         }
 

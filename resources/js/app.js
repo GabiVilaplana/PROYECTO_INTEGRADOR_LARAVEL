@@ -6,6 +6,8 @@ import '../css/servicios.css';
 import './zonas';
 import './bootstrap';
 import './carrousel'; 
+import './userDropdown';
+import './profile';
 
 import Alpine from 'alpinejs';
 

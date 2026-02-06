@@ -31,7 +31,7 @@ class ChatbotApiController extends Controller
         // 2. Buscar la reserva
         // Usamos whereHas para buscar en la tabla 'usuarios' a través de la relación 'usuario'
         $reserva = Reserva::whereHas('usuario', function($query) use ($request) {
-            $query->where('CorreoElectronico', $request->email);
+            $query->where('email', $request->email);
         })
         ->with(['detalles.servicio', 'usuario']) // Cargamos también los datos del usuario
         ->latest('FechaReserva')
