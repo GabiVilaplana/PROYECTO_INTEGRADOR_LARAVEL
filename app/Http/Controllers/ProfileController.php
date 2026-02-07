@@ -87,4 +87,30 @@ class ProfileController extends Controller
         // Redirigir a la página anterior con mensaje de éxito
         return back()->with('success', 'Foto de perfil actualizada correctamente.');
     }
+    public function updateRol(Request $request)
+    {
+        // Solo los administradores pueden cambiar roles
+        if (auth()->user()->idRol != 1) {
+            abort(403, 'Solo los administradores pueden modificar roles.');
+        }
+
+        $user = $request->user(); // o User::findOrFail($request->user_id) si editas otros
+
+        // Determinar el nuevo idRol según TU lógica real
+        $esAdmin = $request->boolean('es_admin');
+        $esProveedor = $request->boolean('es_proveedor');
+
+        if ($esAdmin) {
+            $nuevoRol = 1; // admin
+        } elseif ($esProveedor) {
+            $nuevoRol = 3; // creadorServicio (proveedor)
+        } else {
+            $nuevoRol = 2; // usuario (cliente)
+        }
+
+        $user->idRol = $nuevoRol;
+        $user->save();
+
+        return back()->with('success', 'Roles actualizados correctamente.');
+    }
 }

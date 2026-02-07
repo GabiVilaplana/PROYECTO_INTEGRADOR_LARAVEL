@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Servicio;
+use App\Models\Categoria;
 use App\Models\ServicioFoto;
 use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class ServicioController extends Controller
@@ -239,7 +242,41 @@ class ServicioController extends Controller
     }
     public function create()
     {
-        $categorias = \App\Models\Categoria::where('Activa', true)->get();
+        $categorias = Categoria::where('Activa', true)->get();
         return view('servicios.create', compact('categorias'));
     }
+    public function edit(Servicio $servicio)
+    {
+        if ($servicio->idProveedor !== Auth::id()) {
+            abort(403, 'No tienes permiso para editar este servicio.');
+        }
+
+        $categorias = Categoria::where('Activa', true)->get();
+        return view('servicios.edit', compact('servicio', 'categorias'));
+    }
+    public function toggleActivo(Servicio $servicio)
+    {
+        if ($servicio->idProveedor !== Auth::id()) {
+            if (request()->expectsJson()) {
+                return response()->json(['success' => false, 'message' => 'No autorizado'], 403);
+            }
+            abort(403, 'No tienes permiso para editar este servicio.');
+        }
+
+        $servicio->Activo = !$servicio->Activo;
+        $servicio->save();
+
+        // Si es una petición AJAX (como desde fetch), responder en JSON
+        if (request()->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'activo' => $servicio->Activo,
+                'message' => 'Estado del servicio actualizado correctamente.'
+            ]);
+        }
+
+        // Si no es AJAX, redirigir (comportamiento legacy)
+        return back()->with('success', 'Estado del servicio actualizado correctamente.');
+    }
+
 }

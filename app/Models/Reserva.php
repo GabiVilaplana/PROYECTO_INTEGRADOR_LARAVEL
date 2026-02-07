@@ -32,4 +32,8 @@ class Reserva extends Model
     {
         return $this->hasMany(Pago::class, 'idReserva', 'IDReserva');
     }
+    public function getServiciosAttribute()
+    {
+        return $this->detalles->load('servicio')->pluck('servicio');
+    }
 }
