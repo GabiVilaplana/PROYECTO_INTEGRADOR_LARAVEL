@@ -73,12 +73,14 @@
                     <input type="text" id="servicioInput" placeholder="Escribe un servicio..." class="servicioInput">
 
                     <div class="servicio-results" id="servicioResults">
-                        @foreach($categorias as $categoria)
-                            <div data-nombre="{{ $categoria->Nombre }}" data-id="{{ $categoria->id }}"
-                                class="servicio-option">
-                                {{ $categoria->Nombre }}
-                            </div>
-                        @endforeach
+                        @isset($categorias)
+                            @foreach($categorias as $categoria)
+                                <div data-nombre="{{ $categoria->Nombre }}" data-id="{{ $categoria->id }}"
+                                    class="servicio-option">
+                                    {{ $categoria->Nombre }}
+                                </div>
+                            @endforeach
+                        @endisset
                     </div>
                 </div>
             </div>
