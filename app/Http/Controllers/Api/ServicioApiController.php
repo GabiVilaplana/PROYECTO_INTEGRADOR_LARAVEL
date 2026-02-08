@@ -34,6 +34,8 @@ class ServicioApiController extends Controller
         return response()->json($servicio);
     }
 
+    // app/Http/Controllers/Api/ServicioApiController.php
+
     public function buscar(Request $request)
     {
         $request->validate([
@@ -45,18 +47,30 @@ class ServicioApiController extends Controller
         $lng = $request->lng;
 
         $servicios = Servicio::selectRaw("
-            *,
-            (6371 * acos(
-                cos(radians(?))
-                * cos(radians(lat))
-                * cos(radians(lng) - radians(?))
-                + sin(radians(?)) * sin(radians(lat))
-            )) AS distancia
-        ", [$lat, $lng, $lat])
-        ->having('distancia', '<=', DB::raw('radio_km'))
-        ->orderBy('distancia')
-        ->with(['categoria','proveedor','fotoPrincipal'])
-        ->get();
+        *,
+        (6371 * acos(
+            cos(radians(?))
+            * cos(radians(lat))
+            * cos(radians(lng) - radians(?))
+            + sin(radians(?)) * sin(radians(lat))
+        )) AS distancia
+    ", [$lat, $lng, $lat])
+            ->where('Activo', true)
+            ->whereNotNull('lat')
+            ->whereNotNull('lng')
+            ->where('radio_km', '>', 0)
+            ->having('distancia', '<=', DB::raw('radio_km'))
+            ->orderBy('distancia')
+            ->with(['categoria', 'proveedor', 'fotoPrincipal'])
+            ->limit(50)
+            ->get();
+
+        // Asegúrate de que las URLs de fotos sean accesibles
+        $servicios->each(function ($servicio) {
+            if ($servicio->fotoPrincipal && $servicio->fotoPrincipal->RutaFoto) {
+                $servicio->fotoPrincipal->url = asset('storage/' . ltrim($servicio->fotoPrincipal->RutaFoto, '/'));
+            }
+        });
 
         return response()->json($servicios);
     }

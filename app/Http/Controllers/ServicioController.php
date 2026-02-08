@@ -6,7 +6,6 @@ use App\Models\Servicio;
 use App\Models\Categoria;
 use App\Models\ServicioFoto;
 use Illuminate\Http\Request;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -217,25 +216,30 @@ class ServicioController extends Controller
     public function buscar(Request $request)
     {
         $request->validate([
-            'lat' => 'required|numeric',
-            'lng' => 'required|numeric',
+            'lat' => 'required|numeric|min:-90|max:90',
+            'lng' => 'required|numeric|min:-180|max:180',
         ]);
 
         $lat = $request->lat;
         $lng = $request->lng;
 
         $servicios = Servicio::selectRaw("
-            *,
-            (6371 * acos(
-                cos(radians(?))
-                * cos(radians(lat))
-                * cos(radians(lng) - radians(?))
-                + sin(radians(?)) * sin(radians(lat))
-            )) AS distancia
-        ", [$lat, $lng, $lat])
+        *,
+        (6371 * acos(
+            cos(radians(?))
+            * cos(radians(lat))
+            * cos(radians(lng) - radians(?))
+            + sin(radians(?)) * sin(radians(lat))
+        )) AS distancia
+    ", [$lat, $lng, $lat])
+            ->where('Activo', true)
+            ->whereNotNull('lat')
+            ->whereNotNull('lng')
+            ->where('radio_km', '>', 0)
             ->having('distancia', '<=', DB::raw('radio_km'))
             ->orderBy('distancia')
             ->with(['categoria', 'proveedor', 'fotoPrincipal'])
+            ->limit(50)
             ->get();
 
         return response()->json($servicios);

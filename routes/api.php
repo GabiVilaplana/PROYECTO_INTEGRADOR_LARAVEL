@@ -23,4 +23,5 @@ Route::prefix('zonas')->group(function () {
     Route::get('/', [ZonaApiController::class, 'index']);             // Listar todas las ciudades
     Route::get('/search', [ZonaApiController::class, 'search']);      // Autocompletado por nombre
     Route::get('/{slug}', [ZonaApiController::class, 'show']);        // Obtener ciudad por slug
+    Route::post('/servicios/buscar', [ServicioApiController::class, 'buscar']); // Buscar servicios por ubicación (lat/lng) - para el filtro de zonas
 });
