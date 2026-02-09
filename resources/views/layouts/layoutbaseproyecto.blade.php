@@ -79,5 +79,61 @@
         #n8n-chat .chat-input-send-button:hover {
             background-color: #0284c7 !important;
         }
+
+        @media (max-width: 768px) {
+            #n8n-chat .chat-window-toggle {
+                width: 50px !important;
+                height: 50px !important;
+            }
+
+            #n8n-chat .chat-window-toggle svg {
+                width: 24px !important;
+                height: 24px !important;
+            }
+
+            /* Opcional: reducir el tamaño del chat si está abierto */
+            #n8n-chat .chat-window {
+                width: 95vw !important;
+                max-width: 320px !important;
+                right: 2.5% !important;
+                bottom: 80px !important;
+                border-radius: 12px !important;
+            }
+
+            #n8n-chat .chat-header {
+                padding: 12px !important;
+            }
+
+            #n8n-chat .chat-input-container input {
+                font-size: 14px !important;
+                padding: 8px 12px !important;
+            }
+        }
+
+        /* Pantallas muy pequeñas (ej. iPhone SE) */
+        @media (max-width: 480px) {
+            #n8n-chat .chat-window-toggle {
+                width: 44px !important;
+                height: 44px !important;
+            }
+
+            #n8n-chat .chat-window-toggle svg {
+                width: 20px !important;
+                height: 20px !important;
+            }
+
+            #n8n-chat .chat-window {
+                width: 96vw !important;
+                max-width: 290px !important;
+                bottom: 70px !important;
+            }
+        }
+
+        /* Pantallas grandes (desktop) – asegurar tamaño máximo */
+        @media (min-width: 1200px) {
+            #n8n-chat .chat-window {
+                max-width: 400px !important;
+            }
+        }
     </style>
 </body>
