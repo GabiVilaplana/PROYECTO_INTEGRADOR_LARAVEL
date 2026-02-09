@@ -36,4 +36,15 @@ class Reserva extends Model
     {
         return $this->detalles->load('servicio')->pluck('servicio');
     }
+    public function servicio()
+    {
+        return $this->hasOneThrough(
+            Servicio::class,
+            ReservaDetalle::class,
+            'idReserva',      // FK en ReservaDetalle
+            'IDServicio',     // PK en Servicio
+            'IDReserva',      // PK en Reserva
+            'idServicio'      // FK en ReservaDetalle
+        );
+    }
 }

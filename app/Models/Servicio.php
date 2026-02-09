@@ -53,4 +53,8 @@ class Servicio extends Model
     {
         return $this->hasMany(ReservaDetalle::class, 'idServicio', 'IDServicio');
     }
+    public function getRouteKeyName()
+    {
+        return 'IDServicio';
+    }
 }

@@ -4,6 +4,8 @@ import '../css/hero.css';
 import '../css/categorias.css';
 import '../css/servicios.css';
 import '../css/profile.css';
+import '../css/zonas.css';
+import '../css/reservas.css';
 import './zonasZona';
 import './zonasFecha';
 import './zonasServicio';

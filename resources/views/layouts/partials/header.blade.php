@@ -135,6 +135,7 @@
                 <li><a href="{{ route('profile') }}"><span>👤</span> Perfil</a></li>
                 <li><a href="{{ route('favoritos') }}"><span>❤️</span> Favoritos</a></li>
                 <li><a href="{{ route('mensajes') }}"><span>💬</span> Mensajes</a></li>
+                <li><a href="{{ route('reservas.mi-lista') }}"><span>🧾</span> Mis compras</a></li>
                 @if(Auth::user()->idRol != 2)
                     <li><a href="{{ route('servicios.create') }}"><span>➕🛠️</span> Añadir Servicio</a></li>
                 @endif
