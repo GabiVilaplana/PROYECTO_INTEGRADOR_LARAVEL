@@ -159,3 +159,9 @@
         </div>
     @endauth
 </header>
+
+<script>
+    window.routes = {
+        actualizarFotoPerfil: "{{ route('perfil.foto.actualizar') }}"
+    };
+</script>

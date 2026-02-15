@@ -57,4 +57,5 @@ class Servicio extends Model
     {
         return 'IDServicio';
     }
+    // app/Models/Servicio.php
 }

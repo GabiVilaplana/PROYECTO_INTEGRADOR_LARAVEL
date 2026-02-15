@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Servicio;
+use App\Models\Categoria;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -71,6 +72,25 @@ class ServicioApiController extends Controller
                 $servicio->fotoPrincipal->url = asset('storage/' . ltrim($servicio->fotoPrincipal->RutaFoto, '/'));
             }
         });
+
+        return response()->json($servicios);
+    }
+    public function porCategoriaId(int $idCategoria)
+    {
+        $categoria = Categoria::where('IDCategoria', $idCategoria)
+            ->where('Activa', true)
+            ->first();
+
+        if (!$categoria) {
+            return response()->json([
+                'message' => 'Categoría no encontrada o inactiva'
+            ], 404);
+        }
+
+        $servicios = Servicio::with(['categoria', 'proveedor', 'fotoPrincipal'])
+            ->where('idCategoria', $idCategoria)
+            ->where('Activo', true)
+            ->get();
 
         return response()->json($servicios);
     }
