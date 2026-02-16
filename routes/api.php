@@ -36,4 +36,5 @@ Route::prefix('categorias')->group(function () {
 // Rutas protegidas
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/usuario', [UsuarioApiController::class, 'show']);
+    Route::post('/perfil/foto', [UsuarioApiController::class, 'updateProfilePhoto']);
 });

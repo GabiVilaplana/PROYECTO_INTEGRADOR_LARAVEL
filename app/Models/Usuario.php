@@ -10,6 +10,7 @@ class Usuario extends Authenticatable
     use HasFactory;
 
     protected $primaryKey = 'IDUsuario';
+    protected $appends = ['imagen_url'];
 
     protected $fillable = [
         'Nombre',
@@ -56,6 +57,10 @@ class Usuario extends Authenticatable
             return asset('storage/' . ltrim($this->FotoPerfil, '/'));
         }
         return asset('storage/perfiles/default.jpg');
+    }
+    public function getImagenUrlAttribute()
+    {
+        return $this->foto_perfil_url;
     }
     public function setPasswordAttribute($value)
     {

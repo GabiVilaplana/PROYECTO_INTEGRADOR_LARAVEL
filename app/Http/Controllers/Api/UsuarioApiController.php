@@ -35,4 +35,31 @@ class UsuarioApiController extends Controller
             'FotoPerfilUrl' => $fotoPerfilUrl,
         ]);
     }
+
+    public function updateProfilePhoto(Request $request)
+    {
+        $request->validate([
+            'foto_perfil' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        $user = $request->user();
+
+        if ($request->hasFile('foto_perfil')) {
+            // Delete old photo if exists and not default
+            if ($user->FotoPerfil && $user->FotoPerfil !== 'perfiles/default.jpg') {
+                Storage::disk('public')->delete($user->FotoPerfil);
+            }
+
+            $path = $request->file('foto_perfil')->store('perfiles', 'public');
+            $user->FotoPerfil = $path;
+            $user->save();
+
+            return response()->json([
+                'success' => true,
+                'FotoPerfilUrl' => Storage::disk('public')->url($path)
+            ]);
+        }
+
+        return response()->json(['error' => 'No file uploaded'], 400);
+    }
 }

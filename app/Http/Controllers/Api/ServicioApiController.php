@@ -7,6 +7,7 @@ use App\Models\Servicio;
 use App\Models\Categoria;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Storage;
 
 class ServicioApiController extends Controller
 {
@@ -32,8 +33,28 @@ class ServicioApiController extends Controller
             'valoraciones'
         ])->findOrFail($id);
 
-        return response()->json($servicio);
+        return response()->json([
+            'IDServicio' => $servicio->IDServicio,
+            'Nombre' => $servicio->Nombre,
+            'Descripcion' => $servicio->Descripcion,
+            'Precio' => $servicio->Precio,
+            'Duracion' => $servicio->Duracion,
+            'Activo' => $servicio->Activo,
+            'lat' => $servicio->lat,
+            'lng' => $servicio->lng,
+            'radio_km' => $servicio->radio_km,
+
+            // Relaciones
+            'categoria' => $servicio->categoria,
+            'proveedor' => $servicio->proveedor,
+            'fotos' => $servicio->fotos,
+            'valoraciones' => $servicio->valoraciones,
+
+            // Imagen calculada centralizadamente en el modelo
+            'ImagenUrl' => $servicio->imagen_url,
+        ]);
     }
+
 
     // app/Http/Controllers/Api/ServicioApiController.php
 
@@ -68,9 +89,10 @@ class ServicioApiController extends Controller
 
         // Asegúrate de que las URLs de fotos sean accesibles
         $servicios->each(function ($servicio) {
-            if ($servicio->fotoPrincipal && $servicio->fotoPrincipal->RutaFoto) {
-                $servicio->fotoPrincipal->url = asset('storage/' . ltrim($servicio->fotoPrincipal->RutaFoto, '/'));
-            }
+            // we don't need to manually set it anymore because it's in $appends
+            // so we just ensure it's loaded properly.
+            // But we can force it to be clear for the user:
+            $servicio->imagen_url = $servicio->imagen_url;
         });
 
         return response()->json($servicios);

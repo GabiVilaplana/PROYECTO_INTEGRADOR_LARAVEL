@@ -10,6 +10,7 @@ class Servicio extends Model
     use HasFactory;
 
     protected $primaryKey = 'IDServicio';
+    protected $appends = ['imagen_url'];
 
     protected $fillable = [
         'Nombre',
@@ -57,5 +58,23 @@ class Servicio extends Model
     {
         return 'IDServicio';
     }
-    // app/Models/Servicio.php
+    public function getImagenUrlAttribute()
+    {
+        // 1. Intentar obtener la foto principal del servicio
+        $foto = $this->relationLoaded('fotoPrincipal') ? $this->fotoPrincipal : $this->fotoPrincipal()->first();
+
+        if ($foto && $foto->RutaFoto) {
+            return asset('storage/' . ltrim($foto->RutaFoto, '/'));
+        }
+
+        // 2. Si no hay foto principal, intentar usar la imagen de la categoría
+        $categoria = $this->relationLoaded('categoria') ? $this->categoria : $this->categoria()->first();
+
+        if ($categoria && $categoria->Imagen) {
+            return asset('storage/' . ltrim(strtolower($categoria->Imagen), '/'));
+        }
+
+        // 3. Imagen por defecto final
+        return asset('storage/perfiles/default.jpg');
+    }
 }

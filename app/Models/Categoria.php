@@ -10,6 +10,7 @@ class Categoria extends Model
     use HasFactory;
 
     protected $primaryKey = 'IDCategoria';
+    protected $appends = ['imagen_url'];
 
     protected $fillable = [
         'Nombre',
@@ -24,8 +25,16 @@ class Categoria extends Model
     {
         return $this->hasMany(Servicio::class, 'idCategoria', 'IDCategoria');
     }
-    public function getImagenAttribute($value)
+    public function getImagenUrlAttribute()
     {
-        return $value ?? 'categorias/default.jpg';
+        if (!$this->Imagen) {
+            return asset('storage/categorias/default.jpg');
+        }
+        
+        if (filter_var($this->Imagen, FILTER_VALIDATE_URL)) {
+            return $this->Imagen;
+        }
+
+        return asset('storage/' . ltrim($this->Imagen, '/'));
     }
 }
