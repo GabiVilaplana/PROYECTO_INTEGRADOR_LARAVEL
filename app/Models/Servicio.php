@@ -10,7 +10,7 @@ class Servicio extends Model
     use HasFactory;
 
     protected $primaryKey = 'IDServicio';
-    protected $appends = ['imagen_url'];
+    protected $appends = ['imagen_url', 'promedio_valoracion'];
 
     protected $fillable = [
         'Nombre',
@@ -24,6 +24,12 @@ class Servicio extends Model
         'lng',
         'radio_km',
     ];
+
+    public function getPromedioValoracionAttribute()
+    {
+        $promedio = $this->valoraciones()->avg('Puntuacion') ?: 0;
+        return round($promedio, 1);
+    }
 
     public function categoria()
     {

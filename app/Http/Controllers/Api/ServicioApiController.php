@@ -30,7 +30,7 @@ class ServicioApiController extends Controller
             'proveedor',
             'fotos',
             'fotoPrincipal',
-            'valoraciones'
+            'valoraciones.usuario'
         ])->findOrFail($id);
 
         return response()->json([
@@ -50,8 +50,9 @@ class ServicioApiController extends Controller
             'fotos' => $servicio->fotos,
             'valoraciones' => $servicio->valoraciones,
 
-            // Imagen calculada centralizadamente en el modelo
+            // Imagen y promedio calculados en el modelo
             'ImagenUrl' => $servicio->imagen_url,
+            'PromedioValoracion' => $servicio->promedio_valoracion,
         ]);
     }
 
@@ -90,9 +91,6 @@ class ServicioApiController extends Controller
         // Asegúrate de que las URLs de fotos sean accesibles
         $servicios->each(function ($servicio) {
             // we don't need to manually set it anymore because it's in $appends
-            // so we just ensure it's loaded properly.
-            // But we can force it to be clear for the user:
-            $servicio->imagen_url = $servicio->imagen_url;
         });
 
         return response()->json($servicios);

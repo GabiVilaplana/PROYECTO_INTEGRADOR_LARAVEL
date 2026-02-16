@@ -10,7 +10,7 @@ class ZonaController extends Controller
     // Listar todas las zonas (para selector)
     public function index()
     {
-        return Zona::orderBy('nombre')->get(['id', 'nombre', 'slug']);
+        return Zona::orderBy('nombre')->get(['id', 'nombre', 'slug', 'lat', 'lng']);
     }
 
     // Autocomplete (búsqueda por nombre)
