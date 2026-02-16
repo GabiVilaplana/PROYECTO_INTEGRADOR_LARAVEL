@@ -61,4 +61,8 @@ class Usuario extends Authenticatable
     {
         $this->attributes['password'] = bcrypt($value);
     }
+    public function getAuthIdentifierName()
+    {
+        return 'IDUsuario';
+    }
 }

@@ -22,35 +22,50 @@ class AuthenticatedSessionController extends Controller
     /**
      * Handle an incoming authentication request.
      */
-    public function store(LoginRequest $request)
+    public function store(Request $request) // Cambia LoginRequest por Request normal para probar
     {
-        $request->authenticate();        // Valida y autentica
-        $request->session()->regenerate(); // Previene session fixation
+        $credenciales = [
+            'email' => $request->email,
+            'password' => $request->password,
+            'Activo' => 1 // Asegúrate de que en la DB sea 1 o true
+        ];
 
-        return redirect()->intended(route('home')); // Redirige a la ruta home
+        if (Auth::attempt($credenciales)) {
+            $request->session()->regenerate();
+
+            return response()->json([
+                'message' => 'Login exitoso',
+                'user' => Auth::user()
+            ], 200);
+        }
+
+        return response()->json([
+            'message' => 'Las credenciales no coinciden.'
+        ], 422);
     }
 
 
     /**
      * Destroy an authenticated session.
      */
-    public function destroy(Request $request): RedirectResponse
+    public function destroy(Request $request)
     {
         Auth::guard('web')->logout();
-
         $request->session()->invalidate();
-
         $request->session()->regenerateToken();
 
-        return redirect()->intended(route('home'));
+        if ($request->wantsJson() || $request->ajax()) {
+            return response()->json(['message' => 'Sesión cerrada'], 200);
+        }
 
+        return redirect()->intended(route('home'));
     }
 
     protected function credentials(Request $request)
     {
         return [
             'email' => $request->email,
-            'Password' => $request->password,
+            'password' => $request->password,
             'Activo' => true,
         ];
     }
