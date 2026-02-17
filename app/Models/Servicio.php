@@ -83,4 +83,71 @@ class Servicio extends Model
         // 3. Imagen por defecto final
         return asset('storage/perfiles/default.jpg');
     }
+    public function disponibilidades()
+    {
+        return $this->hasMany(
+            ServicioDisponibilidad::class,
+            'idServicio',      
+            'IDServicio'       
+        );
+    }
+
+    public function getAvailableSlots($fecha)
+    {
+        $fechaObj = \Carbon\Carbon::parse($fecha);
+        $diaSemana = $fechaObj->dayOfWeek; // 0 (Domingo) a 6 (Sábado)
+
+        // 1. Obtener disponibilidad del proveedor para ese día
+        $disponibilidad = $this->disponibilidades()
+            ->where('dia_semana', $diaSemana)
+            ->where('activo', true)
+            ->get();
+
+        if ($disponibilidad->isEmpty()) {
+            return [];
+        }
+
+        // 2. Obtener reservas existentes para ese día
+        $reservas = ReservaDetalle::where('idServicio', $this->IDServicio)
+            ->where('FechaServicio', $fecha)
+            ->orderBy('HoraServicio')
+            ->get();
+
+        $slots = [];
+        $buffer = 20; // 20 minutos de descanso
+        $duracionTotal = $this->Duracion + $buffer;
+
+        foreach ($disponibilidad as $disp) {
+            $inicio = \Carbon\Carbon::parse($fecha . ' ' . $disp->hora_inicio);
+            $fin = \Carbon\Carbon::parse($fecha . ' ' . $disp->hora_fin);
+
+            $currentSlot = $inicio->copy();
+
+            while ($currentSlot->copy()->addMinutes($this->Duracion)->lte($fin)) {
+                $slotStart = $currentSlot->toTimeString();
+                $slotEnd = $currentSlot->copy()->addMinutes($this->Duracion)->toTimeString();
+                $slotFullEnd = $currentSlot->copy()->addMinutes($duracionTotal)->toTimeString();
+
+                // Verificar si el slot choca con alguna reserva
+                $isOccupied = $reservas->contains(function ($reserva) use ($slotStart, $slotFullEnd) {
+                    $resStart = $reserva->HoraServicio;
+                    $resEnd = \Carbon\Carbon::parse($resStart)->addMinutes($this->Duracion + 20)->toTimeString();
+
+                    return ($slotStart >= $resStart && $slotStart < $resEnd) ||
+                        ($slotFullEnd > $resStart && $slotFullEnd <= $resEnd);
+                });
+
+                if (!$isOccupied) {
+                    $slots[] = [
+                        'inicio' => $slotStart,
+                        'fin' => $slotEnd
+                    ];
+                }
+
+                $currentSlot->addMinutes($duracionTotal);
+            }
+        }
+
+        return $slots;
+    }
 }

@@ -17,7 +17,8 @@ class ServicioApiController extends Controller
             'categoria',
             'proveedor',
             'fotoPrincipal',
-            'fotos'
+            'fotos',
+            'disponibilidades' // Added disponibilidades
         ])->where('Activo', true)->get();
 
         return response()->json($servicios);
@@ -30,10 +31,12 @@ class ServicioApiController extends Controller
             'proveedor',
             'fotos',
             'fotoPrincipal',
-            'valoraciones.usuario'
+            'valoraciones.usuario',
+            'disponibilidades'
         ])->findOrFail($id);
 
         return response()->json([
+            '_debug_endpoint' => 'Api/ServicioApiController@show', // Debug marker
             'IDServicio' => $servicio->IDServicio,
             'Nombre' => $servicio->Nombre,
             'Descripcion' => $servicio->Descripcion,
@@ -47,10 +50,24 @@ class ServicioApiController extends Controller
             // Relaciones
             'categoria' => $servicio->categoria,
             'proveedor' => $servicio->proveedor,
-            'fotos' => $servicio->fotos,
+            'fotos' => $servicio->fotos->map(function ($foto) {
+                return [
+                    'IDFoto' => $foto->IDFoto,
+                    'RutaFoto' => $foto->RutaFoto,
+                    'EsPrincipal' => $foto->EsPrincipal,
+                    'Url' => $foto->url,
+                ];
+            }),
             'valoraciones' => $servicio->valoraciones,
-
-            // Imagen y promedio calculados en el modelo
+            'disponibilidad' => $servicio->disponibilidades->map(function ($disponibilidad) {
+                return [
+                    'IDDisponibilidad' => $disponibilidad->IDDisponibilidad,
+                    'dia_semana' => $disponibilidad->dia_semana,
+                    'hora_inicio' => $disponibilidad->hora_inicio,
+                    'hora_fin' => $disponibilidad->hora_fin,
+                    'activo' => $disponibilidad->activo,
+                ];
+            }),
             'ImagenUrl' => $servicio->imagen_url,
             'PromedioValoracion' => $servicio->promedio_valoracion,
         ]);
@@ -113,5 +130,17 @@ class ServicioApiController extends Controller
             ->get();
 
         return response()->json($servicios);
+    }
+
+    public function getSlots(Request $request, $id)
+    {
+        $request->validate([
+            'fecha' => 'required|date_format:Y-m-d|after_or_equal:today',
+        ]);
+
+        $servicio = Servicio::findOrFail($id);
+        $slots = $servicio->getAvailableSlots($request->fecha);
+
+        return response()->json($slots);
     }
 }

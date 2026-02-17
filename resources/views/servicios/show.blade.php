@@ -243,7 +243,8 @@
             <div class="product-header">
                 <h1>{{ $servicio->Nombre }}</h1>
                 <p>⭐ {{ number_format($media, 1) }} · {{ $total_resenas }} reseñas ·
-                    {{ $servicio->proveedor?->Ciudad ?? 'Sevilla' }}, España</p>
+                    {{ $servicio->proveedor?->Ciudad ?? 'Sevilla' }}, España
+                </p>
             </div>
 
             <!-- Galería -->
@@ -297,7 +298,8 @@
                             <img src="{{ $fotoUrl }}" class="host-profile-img" alt="Foto del proveedor">
                         @else
                             <!-- Avatar por defecto SVG (siempre visible) -->
-                            <div class="host-profile-img" style="display:flex;align-items:center;justify-content:center;background:#f0f0f0;color:#888;font-weight:bold;">
+                            <div class="host-profile-img"
+                                style="display:flex;align-items:center;justify-content:center;background:#f0f0f0;color:#888;font-weight:bold;">
                                 {{ strtoupper(substr($servicio->proveedor?->Nombre ?? '?', 0, 1)) }}
                             </div>
                         @endif

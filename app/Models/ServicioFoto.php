@@ -10,7 +10,7 @@ class ServicioFoto extends Model
     use HasFactory;
 
     protected $primaryKey = 'IDFoto';
-
+    protected $fillable = ['idServicio', 'RutaFoto', 'EsPrincipal'];
     protected $appends = ['url'];
 
     public function servicio()
@@ -20,8 +20,9 @@ class ServicioFoto extends Model
 
     public function getUrlAttribute()
     {
-        if (!$this->RutaFoto) return null;
-        
+        if (!$this->RutaFoto)
+            return null;
+
         $ruta = $this->RutaFoto;
         // Fix for seeder paths
         if (strpos($ruta, 'images/') === 0) {
@@ -35,7 +36,7 @@ class ServicioFoto extends Model
                 }
             }
         }
-        
+
         return asset('storage/' . ltrim($ruta, '/'));
     }
 }

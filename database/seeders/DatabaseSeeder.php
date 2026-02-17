@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             ValoracionServicioSeeder::class,
             MensajeSeeder::class,
             ZonasSeeder::class,
+            ServicioDisponibilidadSeeder::class,
         ]);
     }
 }

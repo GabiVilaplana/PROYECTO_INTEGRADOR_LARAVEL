@@ -95,7 +95,7 @@
             <div class="flex flex-wrap gap-3 mb-4">
                 @foreach($servicio->fotos as $index => $foto)
                     <div class="relative group">
-                        <img src="{{ asset('storage/' . $foto->ruta) }}" alt="Foto {{ $index + 1 }}"
+                        <img src="{{ asset('storage/' . $foto->RutaFoto) }}" alt="Foto {{ $index + 1 }}"
                              class="w-24 h-24 object-cover rounded border">
                         <div class="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity rounded flex items-center justify-center">
                             <span class="text-white text-xs">Actual</span>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Servicio;
 use App\Models\Categoria;
 use App\Models\ServicioFoto;
+use App\Models\ServicioDisponibilidad;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -78,8 +79,8 @@ class ServicioController extends Controller
             'lng' => 'required|numeric',
             'radio_km' => 'required|integer|min:1',
             'fotos' => 'nullable|array',
-            'fotos.*' => 'string',
-            'fotoPrincipal' => 'nullable|image|max:2048',
+            'fotos.*' => 'image|max:2048',
+            'foto_principal' => 'nullable|integer',
         ]);
 
         DB::transaction(function () use ($request, &$servicio) {
@@ -97,17 +98,24 @@ class ServicioController extends Controller
                 'radio_km' => $request->radio_km,
             ]);
 
-            // ============================
-            // Manejar la foto principal
-            // ============================
-            if ($request->hasFile('fotoPrincipal')) {
-                $path = $request->file('fotoPrincipal')->store('servicios', 'public');
-                ServicioFoto::create([
-                    'idServicio' => $servicio->IDServicio,
-                    'RutaFoto' => $path,
-                    'EsPrincipal' => true,
-                ]);
+            // Si no hay fotos, podríamos poner una por defecto?
+            // La lógica anterior ponía una de categoría si no había fotoPrincipal.
+
+            if ($request->hasFile('fotos')) {
+                $principalIndex = $request->input('foto_principal', 0);
+
+                foreach ($request->file('fotos') as $index => $file) {
+                    if ($file->isValid()) {
+                        $path = $file->store('servicios', 'public');
+                        ServicioFoto::create([
+                            'idServicio' => $servicio->IDServicio,
+                            'RutaFoto' => $path,
+                            'EsPrincipal' => ($index == $principalIndex),
+                        ]);
+                    }
+                }
             } else {
+                // Si no subió ninguna foto, usar la de la categoría como principal
                 $categoria = $servicio->categoria;
                 ServicioFoto::create([
                     'idServicio' => $servicio->IDServicio,
@@ -116,17 +124,27 @@ class ServicioController extends Controller
                 ]);
             }
 
-            // Guardar fotos adicionales
-            if ($request->filled('fotos')) {
-                foreach ($request->fotos as $ruta) {
-                    ServicioFoto::create([
+            // 3. Manejar Disponibilidad semanal
+            if ($request->has('disponibilidad')) {
+                foreach ($request->disponibilidad as $dia => $data) {
+                    $activo = isset($data['activo']) && $data['activo'] == '1';
+
+                    ServicioDisponibilidad::create([
                         'idServicio' => $servicio->IDServicio,
-                        'RutaFoto' => $ruta,
-                        'EsPrincipal' => false,
+                        'dia_semana' => $dia,
+                        'hora_inicio' => $data['inicio'] ?? '09:00',
+                        'hora_fin' => $data['fin'] ?? '18:00',
+                        'activo' => $activo
                     ]);
                 }
             }
         });
+
+        // Si es una petición web (no AJAX), redirigir
+        if (!$request->expectsJson()) {
+            return redirect()->route('servicios.show', $servicio->IDServicio)
+                ->with('success', 'Servicio creado correctamente');
+        }
 
         return response()->json([
             'message' => 'Servicio creado correctamente',
@@ -151,7 +169,10 @@ class ServicioController extends Controller
             'lat' => 'sometimes|numeric',
             'lng' => 'sometimes|numeric',
             'radio_km' => 'sometimes|integer|min:1',
-            'fotoPrincipal' => 'nullable|image|max:2048',
+            'foto_principal_existente' => 'nullable|exists:servicio_fotos,IDFoto',
+            'fotos_nuevas' => 'nullable|array',
+            'fotos_nuevas.*' => 'image|max:2048',
+            'foto_principal_nueva' => 'nullable|integer',
         ]);
 
         DB::transaction(function () use ($request, $servicio) {
@@ -168,24 +189,57 @@ class ServicioController extends Controller
                 'radio_km',
             ]));
 
-            // Actualizar o agregar foto principal
-            if ($request->hasFile('fotoPrincipal')) {
-                $servicio->fotoPrincipal()->delete();
-                $path = $request->file('fotoPrincipal')->store('servicios', 'public');
-                ServicioFoto::create([
-                    'idServicio' => $servicio->IDServicio,
-                    'RutaFoto' => $path,
-                    'EsPrincipal' => true,
-                ]);
-            } elseif (!$servicio->fotoPrincipal) {
-                $categoria = $servicio->categoria;
-                ServicioFoto::create([
-                    'idServicio' => $servicio->IDServicio,
-                    'RutaFoto' => 'categorias/' . $categoria->Nombre . '.jpg',
-                    'EsPrincipal' => true,
-                ]);
+            // 1. Manejar cambio de foto principal entre las existentes
+            if ($request->filled('foto_principal_existente')) {
+                ServicioFoto::where('idServicio', $servicio->IDServicio)->update(['EsPrincipal' => false]);
+                ServicioFoto::where('IDFoto', $request->foto_principal_existente)->update(['EsPrincipal' => true]);
+            }
+
+            // 2. Manejar nuevas fotos
+            if ($request->hasFile('fotos_nuevas')) {
+                $nuevaPrincipalIndex = $request->input('foto_principal_nueva');
+
+                foreach ($request->file('fotos_nuevas') as $index => $file) {
+                    if ($file->isValid()) {
+                        $path = $file->store('servicios', 'public');
+
+                        $isPrincipal = (isset($nuevaPrincipalIndex) && $index == $nuevaPrincipalIndex);
+
+                        if ($isPrincipal) {
+                            // Si esta nueva es la principal, quitamos principal a todas las demás
+                            ServicioFoto::where('idServicio', $servicio->IDServicio)->update(['EsPrincipal' => false]);
+                        }
+
+                        ServicioFoto::create([
+                            'idServicio' => $servicio->IDServicio,
+                            'RutaFoto' => $path,
+                            'EsPrincipal' => $isPrincipal,
+                        ]);
+                    }
+                }
+            }
+
+            // 3. Manejar Disponibilidad semanal
+            if ($request->has('disponibilidad')) {
+                foreach ($request->disponibilidad as $dia => $data) {
+                    $activo = isset($data['activo']) && $data['activo'] == '1';
+
+                    ServicioDisponibilidad::updateOrCreate(
+                        ['idServicio' => $servicio->IDServicio, 'dia_semana' => $dia],
+                        [
+                            'hora_inicio' => $data['inicio'] ?? '09:00',
+                            'hora_fin' => $data['fin'] ?? '18:00',
+                            'activo' => $activo
+                        ]
+                    );
+                }
             }
         });
+
+        if (!$request->expectsJson()) {
+            return redirect()->route('servicios.show', $servicio->IDServicio)
+                ->with('success', 'Servicio actualizado correctamente');
+        }
 
         return response()->json([
             'message' => 'Servicio actualizado',
