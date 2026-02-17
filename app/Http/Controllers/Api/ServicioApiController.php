@@ -18,7 +18,7 @@ class ServicioApiController extends Controller
             'proveedor',
             'fotoPrincipal',
             'fotos',
-            'disponibilidades' // Added disponibilidades
+            'disponibilidades' 
         ])->where('Activo', true)->get();
 
         return response()->json($servicios);
@@ -36,7 +36,7 @@ class ServicioApiController extends Controller
         ])->findOrFail($id);
 
         return response()->json([
-            '_debug_endpoint' => 'Api/ServicioApiController@show', // Debug marker
+            '_debug_endpoint' => 'Api/ServicioApiController@show',
             'IDServicio' => $servicio->IDServicio,
             'Nombre' => $servicio->Nombre,
             'Descripcion' => $servicio->Descripcion,

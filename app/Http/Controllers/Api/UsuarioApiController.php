@@ -18,13 +18,15 @@ class UsuarioApiController extends Controller
             return response()->json(null, 401);
         }
 
-        // Construir URL de la foto de perfil
-        $fotoPerfilUrl = null;
-        if ($user->FotoPerfil) {
-            $fotoPerfilUrl = Storage::disk('public')->url($user->FotoPerfil);
-        } else {
-            $fotoPerfilUrl = Storage::disk('public')->url('perfiles/default.jpg');
-        }
+        // Cargar relaciones necesarias para el perfil
+        $user->load([
+            'rol',
+            'servicios.categoria',
+            'reservas.detalles.servicio',
+        ]);
+
+        // Construir URL de la foto de perfil (aunque el accessor ya existe, mantenemos lógica similar o usamos accessor)
+        $fotoPerfilUrl = $user->foto_perfil_url;
 
         return response()->json([
             'IDUsuario' => $user->IDUsuario,
@@ -36,6 +38,12 @@ class UsuarioApiController extends Controller
             'Rol' => $user->rol ? $user->rol->Nombre : null,
             'Activo' => $user->Activo,
             'FotoPerfilUrl' => $fotoPerfilUrl,
+            // Datos adicionales para el perfil
+            'servicios' => $user->servicios,
+            'reservas' => $user->reservas->map(function ($reserva) {
+                // Asegurarse de formatear o incluir lo necesario
+                return $reserva;
+            }),
         ]);
     }
 

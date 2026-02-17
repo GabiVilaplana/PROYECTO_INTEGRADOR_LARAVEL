@@ -69,8 +69,8 @@ class Servicio extends Model
         // 1. Intentar obtener la foto principal del servicio
         $foto = $this->relationLoaded('fotoPrincipal') ? $this->fotoPrincipal : $this->fotoPrincipal()->first();
 
-        if ($foto && $foto->RutaFoto) {
-            return asset('storage/' . ltrim($foto->RutaFoto, '/'));
+        if ($foto) {
+            return $foto->url;
         }
 
         // 2. Si no hay foto principal, intentar usar la imagen de la categoría
