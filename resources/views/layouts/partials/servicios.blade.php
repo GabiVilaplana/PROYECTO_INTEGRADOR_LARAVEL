@@ -49,9 +49,11 @@
 
 									<!-- Botones de acción -->
 									<div class="trasera-botones">
-										<a href="{{ route('servicios.show', $servicio->IDServicio) }}" class="btn-trasera">Ver
-											más</a>
-										<a href="/compra-temporal" class="btn-trasera-Comprar">Comprar ahora</a>
+										<a href="javascript:void(0)" 
+											onclick="ejecutarCompraRapida({{ $servicio->IDServicio }}, '{{ $servicio->Nombre }}')" 
+											class="btn-trasera-Comprar">
+											Comprar ahora
+										</a>
 									</div>
 								</div>
 							</div> <!-- /.course-completo-inner -->
@@ -64,3 +66,75 @@
 	@endforeach
 
 </section>
+
+<!-- Cargamos SweetAlert2 para una interfaz profesional -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+function ejecutarCompraRapida(idServicio, nombreServicio) {
+    // 1. Comprobamos si el usuario está autenticado usando Laravel
+    const isAuthenticated = @json(auth()->check());
+
+    if (!isAuthenticated) {
+        // Si no está logueado, lo mandamos al login
+        Swal.fire({
+            title: '¡Espera!',
+            text: "Debes iniciar sesión para contratar este servicio.",
+            icon: 'info',
+            confirmButtonText: 'Ir al Login'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = "{{ route('login') }}";
+            }
+        });
+        return;
+    }
+
+    // 2. Si está logueado, pedimos confirmación
+    Swal.fire({
+        title: '¿Confirmar compra rápida?',
+        text: `Vas a contratar: ${nombreServicio}`,
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Sí, comprar ahora',
+        cancelButtonText: 'Cancelar'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Mostrar estado de carga
+            Swal.fire({
+                title: 'Procesando...',
+                didOpen: () => { Swal.showLoading() }
+            });
+
+            // 3. Llamada a la API de Laravel
+            fetch('/api/compra-rapida', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({ idServicio: idServicio })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    Swal.fire(
+                        '¡Contratado!',
+                        'El servicio se ha pagado correctamente. Revisa tu correo.',
+                        'success'
+                    );
+                } else {
+                    Swal.fire('Error', data.error || 'Hubo un problema al procesar el pago', 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                Swal.fire('Error', 'No se pudo conectar con el servidor', 'error');
+            });
+        }
+    });
+}
+</script>

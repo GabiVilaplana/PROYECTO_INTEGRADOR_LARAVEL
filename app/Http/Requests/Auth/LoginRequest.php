@@ -44,7 +44,7 @@ class LoginRequest extends FormRequest
         // Usamos los nombres reales de las columnas en la base de datos
         $credentials = [
             'CorreoElectronico' => $this->input('email'),
-            'Password' => $this->input('password'),
+            'password'          => $this->input('password'), // LA LLAVE SIEMPRE EN MINÚSCULA
         ];
 
         if (! Auth::attempt($credentials, $this->boolean('remember'))) {

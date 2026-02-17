@@ -2,52 +2,30 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Facades\Hash;
 
 class Usuario extends Authenticatable
 {
-    use HasFactory;
+    // 1. EL NOMBRE DE TU TABLA REAL
+    protected $table = 'usuarios';
 
+    // 2. TU CLAVE PRIMARIA REAL
     protected $primaryKey = 'IDUsuario';
 
+    // 3. CAMPOS QUE PERMITIMOS GUARDAR
     protected $fillable = [
         'Nombre',
-        'Apellidos',
         'CorreoElectronico',
         'Password',
         'idRol',
         'Activo',
     ];
 
-    // Relación con rol
-    public function rol()
+    // 4. ESTO ES VITAL: Dile a Laravel que tu columna de clave es 'Password'
+    public function getAuthPassword()
     {
-        return $this->belongsTo(Rol::class, 'idRol', 'IDRol');
-    }
-
-    // Servicios creados por el usuario (si es proveedor)
-    public function servicios()
-    {
-        return $this->hasMany(Servicio::class, 'idProveedor', 'IDUsuario');
-    }
-
-    // Reservas hechas por el usuario
-    public function reservas()
-    {
-        return $this->hasMany(Reserva::class, 'idUsuario', 'IDUsuario');
-    }
-
-    // Valoraciones realizadas
-    public function valoraciones()
-    {
-        return $this->hasMany(ValoracionServicio::class, 'idUsuario', 'IDUsuario');
-    }
-
-    // Mensajes enviados
-    public function mensajes()
-    {
-        return $this->hasMany(Mensaje::class, 'idUsuario', 'IDUsuario');
+        return $this->Password;
     }
 
     public function getEmailAttribute()
@@ -55,13 +33,7 @@ class Usuario extends Authenticatable
         return $this->attributes['CorreoElectronico'];
     }
 
-    public function setPasswordAttribute($value)
-    {
-        $this->attributes['Password'] = bcrypt($value);
-    }
-
-    public function getAuthPassword()
-    {
-        return $this->attributes['Password'];
-    }
+    // Desactivamos las etiquetas de tiempo si te dieran problemas, 
+    // pero si las tienes en la DB, déjalo en true
+    public $timestamps = true;
 }
