@@ -18,10 +18,11 @@ class UsuarioFactory extends Factory
         return [
             'Nombre' => $this->faker->firstName(),
             'Apellidos' => $this->faker->lastName(),
-            'CorreoElectronico' => $this->faker->unique()->safeEmail(),
-            'Password' => bcrypt('password'),
+            'email' => $this->faker->unique()->safeEmail(),
+            'password' => bcrypt('password'),
             'idRol' => $rolUsuario,
             'Activo' => $this->faker->boolean(90),
+            'FotoPerfil' => 'perfiles/default.jpg',
         ];
     }
 }

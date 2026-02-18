@@ -11,16 +11,27 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use Illuminate\Support\Facades\Route;
 
+/**
+ * RUTAS PÚBLICAS O DE PROCESAMIENTO
+ * Sacamos el POST de login del grupo 'guest' para evitar redirecciones 
+ * inesperadas que rompan la comunicación con Vue.
+ */
+Route::post('login', [AuthenticatedSessionController::class, 'store'])
+    ->name('login.post');
+
+
+/**
+ * RUTAS PARA USUARIOS NO AUTENTICADOS (GUEST)
+ */
 Route::middleware('guest')->group(function () {
     Route::get('register', [RegisteredUserController::class, 'create'])
         ->name('register');
 
     Route::post('register', [RegisteredUserController::class, 'store']);
 
+    // El GET login es para mostrar el formulario (Blade), se mantiene en guest
     Route::get('login', [AuthenticatedSessionController::class, 'create'])
         ->name('login');
-
-    Route::post('login', [AuthenticatedSessionController::class, 'store']);
 
     Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])
         ->name('password.request');
@@ -35,6 +46,10 @@ Route::middleware('guest')->group(function () {
         ->name('password.store');
 });
 
+
+/**
+ * RUTAS PARA USUARIOS AUTENTICADOS (AUTH)
+ */
 Route::middleware('auth')->group(function () {
     Route::get('verify-email', EmailVerificationPromptController::class)
         ->name('verification.notice');

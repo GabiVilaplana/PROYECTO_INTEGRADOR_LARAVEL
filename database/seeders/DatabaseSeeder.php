@@ -19,6 +19,9 @@ class DatabaseSeeder extends Seeder
             PagoSeeder::class,
             ValoracionServicioSeeder::class,
             MensajeSeeder::class,
+            ZonasSeeder::class,
+            ServicioDisponibilidadSeeder::class,
+            FaqSeeder::class,
         ]);
     }
 }

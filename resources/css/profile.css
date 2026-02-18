@@ -1,0 +1,537 @@
+/* resources/css/profile.css */
+
+.profile-container {
+    max-width: 820px;
+    margin: 2.5rem auto;
+    padding: 0 1.25rem;
+}
+
+.profile-title {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #0f172a;
+    margin-bottom: 2rem;
+    text-align: center;
+    letter-spacing: -0.5px;
+    background: linear-gradient(135deg, #1e40af, #0284c7);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.profile-card {
+    background: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    padding: 2.5rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+}
+
+.profile-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #3b82f6, #0284c7);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.profile-card:hover {
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+    transform: translateY(-2px);
+}
+
+.profile-card:hover::before {
+    opacity: 1;
+}
+
+.profile-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 1.75rem;
+    margin-bottom: 2.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+@media (min-width: 768px) {
+    .profile-header {
+        flex-direction: row;
+        text-align: left;
+        justify-content: flex-start;
+        align-items: flex-start;
+        gap: 2.5rem;
+    }
+}
+
+.profile-avatar {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid #f8fafc;
+    box-shadow: 0 8px 20px rgba(2, 132, 199, 0.25);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+}
+
+.profile-avatar:hover {
+    transform: scale(1.05) rotate(2deg);
+    box-shadow: 0 12px 25px rgba(2, 132, 199, 0.35);
+}
+
+.profile-info {
+    text-align: left;
+    max-width: 100%;
+}
+
+.profile-name {
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: #0f172a;
+    margin: 0 0 0.5rem 0;
+    line-height: 1.2;
+}
+
+.profile-email {
+    color: #475569;
+    font-size: 1.05rem;
+    margin: 0 0 1.25rem 0;
+    font-weight: 500;
+}
+
+/* Formulario de roles */
+.role-form {
+    width: 100%;
+    padding-top: 1rem;
+}
+
+.role-checkbox-label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    padding: 0.75rem 0;
+    transition: all 0.2s ease;
+    border-radius: 8px;
+}
+
+.role-checkbox-label:hover {
+    background: #f8fafc;
+    color: #1d4ed8;
+    padding-left: 0.5rem;
+}
+
+.role-checkbox-input {
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #cbd5e1;
+    border-radius: 6px;
+    margin-right: 1rem;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.role-checkbox-input:checked {
+    background: #3b82f6;
+    border-color: #3b82f6;
+    transform: scale(1.05);
+}
+
+.role-checkbox-input:checked::after {
+    content: '✓';
+    position: absolute;
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.admin-input:checked {
+    background: #ef4444;
+    border-color: #ef4444;
+}
+
+.role-checkbox-text {
+    font-size: 1rem;
+    color: #334155;
+    font-weight: 600;
+    letter-spacing: -0.2px;
+}
+
+.role-checkbox-desc {
+    color: #64748b;
+    font-size: 0.85rem;
+    margin-top: 0.25rem;
+    margin-left: 30px;
+    font-style: italic;
+}
+
+/* Stats grid */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 2rem;
+    margin: 2.5rem 0;
+    padding: 1.5rem 0;
+    border-top: 1px solid #f1f5f9;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.stat-item {
+    text-align: center;
+    padding: 1rem;
+    border-radius: 12px;
+    background: #f8fafc;
+    transition: all 0.2s ease;
+}
+
+.stat-item:hover {
+    background: #eff6ff;
+    transform: translateY(-2px);
+}
+
+.stat-title {
+    font-weight: 700;
+    color: #475569;
+    margin-bottom: 0.75rem;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.stat-value {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #1d4ed8;
+    margin: 0;
+    background: linear-gradient(135deg, #1d4ed8, #0284c7);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Servicios y reservas */
+.services-list,
+.reservations-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.service-item,
+.reservation-item {
+    padding: 1.5rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    background: #fafafa;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.service-item::before,
+.reservation-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 4px;
+    background: linear-gradient(to bottom, #3b82f6, #0284c7);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.service-item:hover,
+.reservation-item:hover {
+    border-color: #cbd5e1;
+    background: #f8fafc;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+}
+
+.service-item:hover::before,
+.reservation-item:hover::before {
+    opacity: 1;
+}
+
+.service-title,
+.reservation-title {
+    font-weight: 700;
+    color: #0f172a;
+    margin: 0 0 0.75rem 0;
+    font-size: 1.1rem;
+    line-height: 1.3;
+}
+
+.service-category,
+.service-price,
+.service-duration,
+.service-description,
+.reservation-service,
+.reservation-date,
+.reservation-total {
+    color: #475569;
+    margin: 0.35rem 0;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+.service-price,
+.reservation-total {
+    font-weight: 700;
+    color: #0284c7;
+}
+
+/* Lista de servicios en reservas */
+.reservation-services-list {
+    list-style: none;
+    padding: 0;
+    margin: 0.75rem 0 0 0;
+}
+
+.reservation-service-item {
+    padding: 0.5rem 0;
+    color: #475569;
+    font-size: 0.9rem;
+    border-left: 3px solid #dbeafe;
+    padding-left: 1rem;
+    margin: 0.35rem 0;
+    font-weight: 500;
+}
+
+/* Badges de estado */
+.status-badge {
+    padding: 0.35rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    display: inline-block;
+    margin-top: 0.25rem;
+}
+
+.status-pendiente {
+    background: #fef3c7;
+    color: #d97706;
+    border: 1px solid #fde68a;
+}
+
+.status-confirmada {
+    background: #dcfce7;
+    color: #16a34a;
+    border: 1px solid #bbf7d0;
+}
+
+.status-cancelada {
+    background: #fee2e2;
+    color: #dc2626;
+    border: 1px solid #fecaca;
+}
+
+.section-subtitle {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #f1f5f9;
+}
+
+/* Botones */
+.btn-update-roles {
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+    color: white;
+    border: none;
+    padding: 0.75rem 2rem;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.35);
+    margin-top: 1.25rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    letter-spacing: 0.5px;
+}
+
+.btn-update-roles:hover {
+    background: linear-gradient(135deg, #2563eb, #1e40af);
+    box-shadow: 0 6px 16px rgba(59, 130, 246, 0.45);
+    transform: translateY(-2px);
+}
+
+.btn-edit-profile {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+    color: #1d4ed8;
+    padding: 0.75rem 2rem;
+    border-radius: 12px;
+    font-weight: 700;
+    text-decoration: none;
+    border: 2px solid #dbeafe;
+    transition: all 0.3s ease;
+    margin-top: 1.25rem;
+    font-size: 1rem;
+    letter-spacing: 0.5px;
+}
+
+.btn-edit-profile:hover {
+    background: linear-gradient(135deg, #eff6ff, #dbeafe);
+    border-color: #bfdbfe;
+    color: #1e40af;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(30, 64, 175, 0.15);
+}
+
+.profile-actions {
+    text-align: center;
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid #f1f5f9;
+}
+
+/* Tabs - Diseño premium */
+.tabs {
+    display: flex;
+    gap: 1.25rem;
+    border-bottom: 3px solid #f1f5f9;
+    padding-bottom: 0.75rem;
+    margin-top: 2.5rem;
+}
+
+.tab-button {
+    background: none;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    color: #64748b;
+    cursor: pointer;
+    border-radius: 12px 12px 0 0;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-weight: 600;
+    position: relative;
+    letter-spacing: 0.3px;
+}
+
+.tab-button:hover {
+    color: #1d4ed8;
+    background: #f8fafc;
+}
+
+.tab-button.active {
+    color: #1d4ed8;
+    background: #f8fafc;
+    font-weight: 700;
+    box-shadow: 0 2px 8px rgba(30, 64, 175, 0.2);
+}
+
+.tab-button.active::after {
+    content: '';
+    position: absolute;
+    bottom: -3px;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #3b82f6, #0284c7);
+    border-radius: 2px;
+}
+
+.tab-pane {
+    display: none;
+    animation: fadeIn 0.4s ease-out;
+}
+
+.tab-pane.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Animaciones adicionales */
+@keyframes float {
+
+    0%,
+    100% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-5px);
+    }
+}
+
+.profile-avatar.animated {
+    animation: float 3s ease-in-out infinite;
+}
+
+.btn-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.75rem 1.5rem;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    letter-spacing: 0.3px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    border: 2px solid transparent;
+}
+
+.btn-action:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.12);
+}
+
+/* Editar - Azul */
+.btn-edit {
+    background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+    color: #1d4ed8;
+    border-color: #dbeafe;
+}
+
+.btn-edit:hover {
+    background: linear-gradient(135deg, #eff6ff, #dbeafe);
+    color: #1e40af;
+    border-color: #bfdbfe;
+}
+
+/* Deshabilitar - Rojo */
+.btn-delete {
+    background: linear-gradient(135deg, #fef2f2, #fee2e2);
+    color: #dc2626;
+    border-color: #fecaca;
+}
+
+.btn-delete:hover {
+    background: linear-gradient(135deg, #feebee, #fecaca);
+    color: #b91c1c;
+    border-color: #fca5a5;
+}

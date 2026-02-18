@@ -16,32 +16,68 @@ class AuthenticatedSessionController extends Controller
      */
     public function create(): View
     {
-        return view('auth.login');
+        return view('auth.loginPropio');
     }
 
     /**
      * Handle an incoming authentication request.
      */
-    public function store(LoginRequest $request): RedirectResponse
+    public function store(Request $request)
     {
-        $request->authenticate();
+        $credenciales = [
+            'email' => $request->email,
+            'password' => $request->password,
+        ];
 
-        $request->session()->regenerate();
+        if (Auth::attempt($credenciales)) {
+            $usuario = Auth::user();
 
-        return redirect()->intended(route('dashboard', absolute: false));
+            if (!$usuario->Activo) {
+                Auth::logout();
+                $request->session()->invalidate();
+                $request->session()->regenerateToken();
+
+                return response()->json([
+                    'message' => 'Tu cuenta está desactivada.'
+                ], 403);
+            }
+
+            $request->session()->regenerate();
+
+            return response()->json([
+                'message' => 'Login exitoso',
+                'user' => $usuario
+            ], 200);
+        }
+
+        return response()->json([
+            'message' => 'Las credenciales no coinciden o la cuenta no existe.'
+        ], 422);
     }
+
 
     /**
      * Destroy an authenticated session.
      */
-    public function destroy(Request $request): RedirectResponse
+    public function destroy(Request $request)
     {
         Auth::guard('web')->logout();
-
         $request->session()->invalidate();
-
         $request->session()->regenerateToken();
 
-        return redirect('/');
+        if ($request->wantsJson() || $request->ajax()) {
+            return response()->json(['message' => 'Sesión cerrada'], 200);
+        }
+
+        return redirect()->intended(route('home'));
+    }
+
+    protected function credentials(Request $request)
+    {
+        return [
+            'email' => $request->email,
+            'password' => $request->password,
+            'Activo' => true,
+        ];
     }
 }

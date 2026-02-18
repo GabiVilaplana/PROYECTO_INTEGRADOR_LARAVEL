@@ -51,7 +51,13 @@
 									<div class="trasera-botones">
 										<a href="{{ route('servicios.show', $servicio->IDServicio) }}" class="btn-trasera">Ver
 											más</a>
-										<a href="/compra-temporal" class="btn-trasera-Comprar">Comprar ahora</a>
+										@auth
+											<a href="{{ route('reservas.pago', $servicio->IDServicio) }}"
+												class="btn-trasera-Comprar">Comprar ahora</a>
+										@else
+											<a href="{{ route('login') }}" class="btn-trasera-Comprar"
+												style="background-color: #6c757d;">Inicia sesión para comprar</a>
+										@endauth
 									</div>
 								</div>
 							</div> <!-- /.course-completo-inner -->
