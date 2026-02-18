@@ -31,4 +31,30 @@ class N8nService
             return false;
         }
     }
+
+    /**
+     * Envía un mensaje al Chatbot de n8n
+     */
+    public static function hablarConIA($mensaje)
+    {
+        $url = env('N8N_WEBHOOK_CHAT_URL');
+
+        try {
+            $response = Http::post($url, [
+                'message' => $mensaje,
+                'timestamp' => now()->toISOString(),
+            ]);
+
+            if ($response->successful()) {
+                // n8n suele devolver la respuesta en un campo 'output' o 'response'
+                $data = $response->json();
+                return $data['output'] ?? $data['response'] ?? $data['message'] ?? 'He recibido tu mensaje.';
+            }
+
+            return false;
+        } catch (\Exception $e) {
+            Log::error("Error enviando mensaje al chatbot de n8n: " . $e->getMessage());
+            return false;
+        }
+    }
 }

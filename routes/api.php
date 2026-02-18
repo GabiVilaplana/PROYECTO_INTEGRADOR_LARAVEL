@@ -6,8 +6,9 @@ use App\Http\Controllers\ServicioController;
 
 // Estas rutas serán accesibles en: tu-dominio.com/api/chatbot/...
 Route::prefix('chatbot')->group(function () {
-    Route::get('/servicios', [ChatbotApiController::class, 'getCatalogo']);
-    Route::post('/reserva-status', [ChatbotApiController::class, 'consultarReserva']);
+    Route::get('/catalogo', [ChatbotApiController::class, 'getCatalogo']);
+    Route::post('/reserva', [ChatbotApiController::class, 'consultarReserva']);
+    Route::post('/chat', [ChatbotApiController::class, 'hablarConChatbot']);
 });
 
 Route::post('/confirmar-pago', [ServicioController::class, 'confirmarPago']);
