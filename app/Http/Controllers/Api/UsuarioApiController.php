@@ -50,7 +50,7 @@ class UsuarioApiController extends Controller
     public function updateProfilePhoto(Request $request)
     {
         $request->validate([
-            'foto_perfil' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'foto_perfil' => 'required|image|mimes:jpeg,png,jpg,gif|max:5120',
         ]);
 
         $user = $request->user();

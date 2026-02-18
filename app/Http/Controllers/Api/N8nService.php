@@ -12,8 +12,8 @@ class N8nService
      */
     public static function enviarConfirmacionCompra($datos)
     {
-        // La URL de tu Webhook de n8n (recomiendo ponerla en el archivo .env)
-        $url = env('N8N_WEBHOOK_COMPRA_URL');
+        // La URL de tu Webhook de n8n
+        $url = config('services.n8n.compra_url');
 
         try {
             $response = Http::post($url, [
@@ -37,9 +37,10 @@ class N8nService
      */
     public static function hablarConIA($mensaje)
     {
-        $url = env('N8N_WEBHOOK_CHAT_URL');
+        $url = config('services.n8n.chat_url');
 
         try {
+            Log::info("Enviando mensaje al chatbot de n8n: $url");
             $response = Http::post($url, [
                 'message' => $mensaje,
                 'timestamp' => now()->toISOString(),
@@ -51,6 +52,7 @@ class N8nService
                 return $data['output'] ?? $data['response'] ?? $data['message'] ?? 'He recibido tu mensaje.';
             }
 
+            Log::error("Error en respuesta de n8n. Status: " . $response->status() . " Body: " . $response->body());
             return false;
         } catch (\Exception $e) {
             Log::error("Error enviando mensaje al chatbot de n8n: " . $e->getMessage());
