@@ -53,4 +53,21 @@ class ChatbotApiController extends Controller
             })
         ]);
     }
+
+    public function hablarConChatbot(Request $request)
+    {
+        if (!$request->has('message')) {
+            return response()->json(['error' => 'No se proporcionó un mensaje'], 400);
+        }
+
+        $respuesta = N8nService::hablarConIA($request->message);
+
+        if (!$respuesta) {
+            return response()->json(['message' => 'Lo siento, no he podido contactar con mi cerebro digital.'], 500);
+        }
+
+        return response()->json([
+            'answer' => $respuesta
+        ]);
+    }
 }

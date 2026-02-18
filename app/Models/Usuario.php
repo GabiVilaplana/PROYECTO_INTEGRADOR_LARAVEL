@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Laravel\Sanctum\HasApiTokens;
 
@@ -10,13 +9,17 @@ class Usuario extends Authenticatable
 {
     use HasApiTokens, HasFactory;
 
+
+    // 2. TU CLAVE PRIMARIA REAL
     protected $primaryKey = 'IDUsuario';
 
+    // 3. CAMPOS QUE PERMITIMOS GUARDAR
     protected $fillable = [
         'Nombre',
         'Apellidos',
         'email',
         'password',  // ¡esta es la columna real!
+
         'idRol',
         'Activo',
         'FotoPerfil',

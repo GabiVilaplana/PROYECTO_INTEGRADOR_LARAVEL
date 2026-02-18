@@ -38,7 +38,7 @@ return [
     'guards' => [
         'web' => [
             'driver' => 'session',
-            'provider' => 'usuarios',
+            'provider' => 'usuarios', // <--- Se llama 'usuarios'
         ],
 
         'api' => [
@@ -65,17 +65,17 @@ return [
     */
 
     'providers' => [
-        'usuarios' => [
+        'usuarios' => [ // <--- ¡CÁMBIALO AQUÍ TAMBIÉN! Antes decía 'users'
             'driver' => 'eloquent',
             'model' => env('AUTH_MODEL', App\Models\Usuario::class),
             'table' => 'usuarios',
         ],
+    ],
 
         // 'users' => [
         //     'driver' => 'database',
         //     'table' => 'users',
         // ],
-    ],
 
     /*
     |--------------------------------------------------------------------------

@@ -16,6 +16,7 @@ use App\Http\Controllers\Api\UsuarioApiController;
 use App\Http\Controllers\Api\ValoracionApiController;
 use App\Http\Controllers\Api\ZonaApiController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ServicioController;
 
 // ============================================
 // RUTAS PÚBLICAS (sin autenticación)
@@ -70,8 +71,9 @@ Route::prefix('zonas')->group(function () {
 
 // Chatbot
 Route::prefix('chatbot')->group(function () {
-    Route::get('/servicios', [ChatbotApiController::class, 'getCatalogo']);
-    Route::post('/reserva-status', [ChatbotApiController::class, 'consultarReserva']);
+    Route::get('/catalogo', [ChatbotApiController::class, 'getCatalogo']);
+    Route::post('/reserva', [ChatbotApiController::class, 'consultarReserva']);
+    Route::post('/chat', [ChatbotApiController::class, 'hablarConChatbot']);
 });
 
 
@@ -145,3 +147,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::put('/servicios/{id}/disponibilidad', [ServicioDisponibilidadApiController::class, 'update']);
     });
 });
+Route::post('/confirmar-pago', [ServicioController::class, 'confirmarPago']);
+Route::middleware('auth:sanctum')->post('/compra-rapida', [ServicioController::class, 'compraRapida']);
+
+
