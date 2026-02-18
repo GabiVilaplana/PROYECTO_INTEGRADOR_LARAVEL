@@ -22,25 +22,36 @@ class AuthenticatedSessionController extends Controller
     /**
      * Handle an incoming authentication request.
      */
-    public function store(Request $request) // Cambia LoginRequest por Request normal para probar
+    public function store(Request $request)
     {
         $credenciales = [
             'email' => $request->email,
             'password' => $request->password,
-            'Activo' => 1 // Asegúrate de que en la DB sea 1 o true
         ];
 
         if (Auth::attempt($credenciales)) {
+            $usuario = Auth::user();
+
+            if (!$usuario->Activo) {
+                Auth::logout();
+                $request->session()->invalidate();
+                $request->session()->regenerateToken();
+
+                return response()->json([
+                    'message' => 'Tu cuenta está desactivada.'
+                ], 403);
+            }
+
             $request->session()->regenerate();
 
             return response()->json([
                 'message' => 'Login exitoso',
-                'user' => Auth::user()
+                'user' => $usuario
             ], 200);
         }
 
         return response()->json([
-            'message' => 'Las credenciales no coinciden.'
+            'message' => 'Las credenciales no coinciden o la cuenta no existe.'
         ], 422);
     }
 

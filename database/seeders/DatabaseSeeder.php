@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
             MensajeSeeder::class,
             ZonasSeeder::class,
             ServicioDisponibilidadSeeder::class,
+            FaqSeeder::class,
         ]);
     }
 }

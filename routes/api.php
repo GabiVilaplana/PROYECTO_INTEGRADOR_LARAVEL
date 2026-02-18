@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\AuthApiController;
 use App\Http\Controllers\Api\CategoriaApiController;
 use App\Http\Controllers\Api\ChatbotApiController;
+use App\Http\Controllers\Api\FaqApiController;
 use App\Http\Controllers\Api\MensajeApiController;
 use App\Http\Controllers\Api\PagoApiController;
 use App\Http\Controllers\Api\ProveedorApiController;
@@ -24,6 +25,16 @@ use Illuminate\Support\Facades\Route;
 Route::post('/login', [AuthApiController::class, 'login']);
 Route::post('/logout', [AuthApiController::class, 'logout']);
 Route::get('/check', [AuthApiController::class, 'check']);
+Route::get('/faqs', [FaqApiController::class, 'index']);
+Route::post('/faqs', [FaqApiController::class, 'store']);
+Route::put('/faqs/{id}', [FaqApiController::class, 'update']);
+Route::delete('/faqs/{id}', [FaqApiController::class, 'destroy']);
+
+Route::get('/faq-categories', [FaqApiController::class, 'categories']);
+Route::post('/faq-categories', [FaqApiController::class, 'storeCategory']);
+Route::put('/faq-categories/{id}', [FaqApiController::class, 'updateCategory']);
+Route::delete('/faq-categories/{id}', [FaqApiController::class, 'destroyCategory']);
+
 
 // Roles
 Route::get('/roles', [RolApiController::class, 'index']);

@@ -53,6 +53,22 @@ class UsuarioSeeder extends Seeder
             'idRol' => Rol::where('Nombre', 'creadorServicio')->first()->IDRol,
             'Activo' => true,
         ]);
+          Usuario::create([
+            'Nombre' => 'Alex',
+            'Apellidos' => 'Lopez España',
+            'email' => 'a2000lex@hotmail.com',
+            'password' => 'alexlopez1234',
+            'idRol' => Rol::where('Nombre', 'admin')->first()->IDRol,
+            'Activo' => true,
+        ]);
+          Usuario::create([
+            'Nombre' => 'Gabi',
+            'Apellidos' => 'Vilaplana',
+            'email' => 'gabired345@gmail.com',
+            'password' => 'gabi1234',
+            'idRol' => Rol::where('Nombre', 'admin')->first()->IDRol,
+            'Activo' => true,
+        ]);
 
         // Usuarios aleatorios con rol "usuario"
         Usuario::factory(10)->create();
