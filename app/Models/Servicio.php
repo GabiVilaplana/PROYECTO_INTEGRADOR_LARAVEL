@@ -10,7 +10,7 @@ class Servicio extends Model
     use HasFactory;
 
     protected $primaryKey = 'IDServicio';
-    protected $appends = ['imagen_url', 'promedio_valoracion'];
+    protected $appends = ['imagen_url', 'promedio_valoracion', 'url_mapas'];
 
     protected $fillable = [
         'Nombre',
@@ -30,6 +30,14 @@ class Servicio extends Model
     {
         $promedio = $this->valoraciones()->avg('Puntuacion') ?: 0;
         return round($promedio, 1);
+    }
+
+    public function getUrlMapasAttribute()
+    {
+        if (!$this->lat || !$this->lng) {
+            return null;
+        }
+        return "https://www.google.com/maps?q={$this->lat},{$this->lng}";
     }
 
     public function categoria()
@@ -93,8 +101,8 @@ class Servicio extends Model
     {
         return $this->hasMany(
             ServicioDisponibilidad::class,
-            'idServicio',      
-            'IDServicio'       
+            'idServicio',
+            'IDServicio'
         );
     }
 

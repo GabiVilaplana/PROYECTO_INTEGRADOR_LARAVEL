@@ -18,7 +18,7 @@ class ServicioApiController extends Controller
             'proveedor',
             'fotoPrincipal',
             'fotos',
-            'disponibilidades' 
+            'disponibilidades'
         ])->where('Activo', true)->get();
 
         return response()->json($servicios);
@@ -48,6 +48,7 @@ class ServicioApiController extends Controller
             'lng' => $servicio->lng,
             'radio_km' => $servicio->radio_km,
             'idZona' => $servicio->idZona,
+            'ruta' => $servicio->url_mapas,
 
             // Relaciones
             'categoria' => $servicio->categoria,
