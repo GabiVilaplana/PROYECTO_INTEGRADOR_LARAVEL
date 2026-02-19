@@ -32,6 +32,16 @@ class Servicio extends Model
         return round($promedio, 1);
     }
 
+    public function getLatAttribute($value)
+    {
+        return $value ?? ($this->zona ? $this->zona->lat : null);
+    }
+
+    public function getLngAttribute($value)
+    {
+        return $value ?? ($this->zona ? $this->zona->lng : null);
+    }
+
     public function getUrlMapasAttribute()
     {
         if (!$this->lat || !$this->lng) {

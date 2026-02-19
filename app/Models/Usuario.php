@@ -9,6 +9,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Usuario extends Authenticatable
 {
     use HasApiTokens, HasFactory;
+    
+    protected $appends = ['foto_perfil_url'];
 
 
     // 2. TU CLAVE PRIMARIA REAL

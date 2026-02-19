@@ -78,15 +78,27 @@ class ServicioController extends Controller
             'Duracion' => 'required|integer|min:1',
             'idCategoria' => 'required|exists:categorias,IDCategoria',
             'idProveedor' => 'required|exists:usuarios,IDUsuario',
-            'lat' => 'required|numeric',
-            'lng' => 'required|numeric',
+            'idZona' => 'nullable|exists:zonas,id',
+            'lat' => 'nullable|numeric',
+            'lng' => 'nullable|numeric',
             'radio_km' => 'required|integer|min:1',
             'fotos' => 'nullable|array',
             'fotos.*' => 'image|max:2048',
             'foto_principal' => 'nullable|integer',
         ]);
 
-        DB::transaction(function () use ($request, &$servicio) {
+        $lat = $request->lat;
+        $lng = $request->lng;
+
+        if ($request->filled('idZona') && (empty($lat) || empty($lng))) {
+            $zona = \App\Models\Zona::find($request->idZona);
+            if ($zona) {
+                $lat = $zona->lat;
+                $lng = $zona->lng;
+            }
+        }
+
+        DB::transaction(function () use ($request, &$servicio, $lat, $lng) {
 
             $servicio = Servicio::create([
                 'Nombre' => $request->Nombre,
@@ -96,8 +108,9 @@ class ServicioController extends Controller
                 'Activo' => true,
                 'idCategoria' => $request->idCategoria,
                 'idProveedor' => $request->idProveedor,
-                'lat' => $request->lat,
-                'lng' => $request->lng,
+                'idZona' => $request->idZona,
+                'lat' => $lat,
+                'lng' => $lng,
                 'radio_km' => $request->radio_km,
             ]);
 
@@ -169,8 +182,9 @@ class ServicioController extends Controller
             'Duracion' => 'sometimes|integer|min:1',
             'Activo' => 'sometimes|boolean',
             'idCategoria' => 'sometimes|exists:categorias,IDCategoria',
-            'lat' => 'sometimes|numeric',
-            'lng' => 'sometimes|numeric',
+            'idZona' => 'nullable|exists:zonas,id',
+            'lat' => 'nullable|numeric',
+            'lng' => 'nullable|numeric',
             'radio_km' => 'sometimes|integer|min:1',
             'foto_principal_existente' => 'nullable|exists:servicio_fotos,IDFoto',
             'fotos_nuevas' => 'nullable|array',
@@ -178,19 +192,34 @@ class ServicioController extends Controller
             'foto_principal_nueva' => 'nullable|integer',
         ]);
 
-        DB::transaction(function () use ($request, $servicio) {
+        $lat = $request->lat ?? $servicio->lat;
+        $lng = $request->lng ?? $servicio->lng;
 
-            $servicio->update($request->only([
+        if ($request->filled('idZona') && ($request->idZona != $servicio->idZona) && (!$request->has('lat') || !$request->has('lng'))) {
+            $zona = \App\Models\Zona::find($request->idZona);
+            if ($zona) {
+                $lat = $zona->lat;
+                $lng = $zona->lng;
+            }
+        }
+
+        DB::transaction(function () use ($request, $servicio, $lat, $lng) {
+
+            $data = $request->only([
                 'Nombre',
                 'Descripcion',
                 'Precio',
                 'Duracion',
                 'Activo',
                 'idCategoria',
-                'lat',
-                'lng',
+                'idZona',
                 'radio_km',
-            ]));
+            ]);
+
+            $data['lat'] = $lat;
+            $data['lng'] = $lng;
+
+            $servicio->update($data);
 
             // 1. Manejar cambio de foto principal entre las existentes
             if ($request->filled('foto_principal_existente')) {
@@ -301,7 +330,8 @@ class ServicioController extends Controller
     public function create()
     {
         $categorias = Categoria::where('Activa', true)->get();
-        return view('servicios.create', compact('categorias'));
+        $zonas = \App\Models\Zona::all(); // O filtradas si es necesario
+        return view('servicios.create', compact('categorias', 'zonas'));
     }
     public function edit(Servicio $servicio)
     {
@@ -310,7 +340,8 @@ class ServicioController extends Controller
         }
 
         $categorias = Categoria::where('Activa', true)->get();
-        return view('servicios.edit', compact('servicio', 'categorias'));
+        $zonas = \App\Models\Zona::all();
+        return view('servicios.edit', compact('servicio', 'categorias', 'zonas'));
     }
     public function toggleActivo(Servicio $servicio)
     {
@@ -337,13 +368,13 @@ class ServicioController extends Controller
         return back()->with('success', 'Estado del servicio actualizado correctamente.');
     }
 
-    public function confirmarPago(Request $request) 
+    public function confirmarPago(Request $request)
     {
         // 1. Validamos (usando los nombres de tus claves foráneas)
         $request->validate([
-            'idReserva'  => 'required|exists:reservas,IDReserva',
+            'idReserva' => 'required|exists:reservas,IDReserva',
             'metodoPago' => 'required|string',
-            'importe'    => 'required|numeric',
+            'importe' => 'required|numeric',
         ]);
 
         try {
@@ -351,32 +382,32 @@ class ServicioController extends Controller
 
             // 2. Crear el registro del pago
             $pago = Pago::create([
-                'idReserva'  => $request->idReserva,
+                'idReserva' => $request->idReserva,
                 'MetodoPago' => $request->metodoPago,
-                'Estado'     => 'completado',
-                'Importe'    => $request->importe,
-                'FechaPago'  => now(),
+                'Estado' => 'completado',
+                'Importe' => $request->importe,
+                'FechaPago' => now(),
             ]);
 
             // 3. Obtener la reserva con el usuario y los nombres de los servicios
             // Cargamos 'usuario' y 'detalles.servicio' (relación anidada)
             $reserva = Reserva::with(['usuario', 'detalles.servicio'])
-                            ->findOrFail($request->idReserva);
+                ->findOrFail($request->idReserva);
 
             // 4. Preparar los nombres de los servicios contratados
             // Como puede haber varios detalles, los unimos con una coma
-            $nombresServicios = $reserva->detalles->map(function($detalle) {
-                return $detalle->servicio->Nombre; 
+            $nombresServicios = $reserva->detalles->map(function ($detalle) {
+                return $detalle->servicio->Nombre;
             })->implode(', ');
 
             // 5. Enviar a n8n
             // dd(env('N8N_WEBHOOK_COMPRA_URL')); 
 
             N8nService::enviarConfirmacionCompra([
-                'email'    => $reserva->usuario->email, // Asegúrate si en Usuario es 'email' o 'Email'
-                'nombre'   => $reserva->usuario->Nombre,
+                'email' => $reserva->usuario->email, // Asegúrate si en Usuario es 'email' o 'Email'
+                'nombre' => $reserva->usuario->Nombre,
                 'servicio' => $nombresServicios,
-                'precio'   => $pago->Importe,
+                'precio' => $pago->Importe,
             ]);
 
             DB::commit();
@@ -392,65 +423,65 @@ class ServicioController extends Controller
         }
     }
 
-    public function compraRapida(Request $request) 
-{
-    // 1. Verificar si el usuario está logueado (desde la API)
-    if (!auth()->check()) {
-        return response()->json(['redirect' => route('login')], 401);
+    public function compraRapida(Request $request)
+    {
+        // 1. Verificar si el usuario está logueado (desde la API)
+        if (!auth()->check()) {
+            return response()->json(['redirect' => route('login')], 401);
+        }
+
+        $request->validate([
+            'idServicio' => 'required|exists:servicios,IDServicio',
+        ]);
+
+        try {
+            DB::beginTransaction();
+            $user = auth()->user();
+            $servicio = Servicio::findOrFail($request->idServicio);
+
+            // 2. Crear la Reserva automáticamente
+            $reserva = Reserva::create([
+                'idUsuario' => $user->IDUsuario,
+                'FechaReserva' => now(),
+                'Estado' => 'confirmada',
+                'Total' => $servicio->Precio,
+            ]);
+
+            // 3. Crear el Detalle de la reserva
+            $reserva->detalles()->create([
+                'idServicio' => $servicio->IDServicio,
+                'Precio' => $servicio->Precio,
+                'FechaServicio' => now()->addDays(1), // Fecha por defecto: mañana
+                'HoraServicio' => '10:00:00',
+            ]);
+
+            // 4. Crear el Pago
+            $pago = Pago::create([
+                'idReserva' => $reserva->IDReserva,
+                'MetodoPago' => 'compra_rapida',
+                'Estado' => 'completado',
+                'Importe' => $servicio->Precio,
+                'FechaPago' => now(),
+            ]);
+
+            // 5. Notificar a n8n
+            N8nService::enviarConfirmacionCompra([
+                'email' => $user->email,
+                'nombre' => $user->Nombre,
+                'servicio' => $servicio->Nombre,
+                'precio' => $servicio->Precio,
+            ]);
+
+            DB::commit();
+
+            return response()->json([
+                'status' => 'success',
+                'message' => '¡Compra realizada con éxito! Revisa tu correo.'
+            ]);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
-
-    $request->validate([
-        'idServicio' => 'required|exists:servicios,IDServicio',
-    ]);
-
-    try {
-        DB::beginTransaction();
-        $user = auth()->user();
-        $servicio = Servicio::findOrFail($request->idServicio);
-
-        // 2. Crear la Reserva automáticamente
-        $reserva = Reserva::create([
-            'idUsuario'     => $user->IDUsuario,
-            'FechaReserva'  => now(),
-            'Estado'        => 'confirmada',
-            'Total'         => $servicio->Precio,
-        ]);
-
-        // 3. Crear el Detalle de la reserva
-        $reserva->detalles()->create([
-            'idServicio'    => $servicio->IDServicio,
-            'Precio'        => $servicio->Precio,
-            'FechaServicio' => now()->addDays(1), // Fecha por defecto: mañana
-            'HoraServicio'  => '10:00:00',
-        ]);
-
-        // 4. Crear el Pago
-        $pago = Pago::create([
-            'idReserva'  => $reserva->IDReserva,
-            'MetodoPago' => 'compra_rapida',
-            'Estado'     => 'completado',
-            'Importe'    => $servicio->Precio,
-            'FechaPago'  => now(),
-        ]);
-
-        // 5. Notificar a n8n
-        N8nService::enviarConfirmacionCompra([
-            'email'    => $user->email,
-            'nombre'   => $user->Nombre,
-            'servicio' => $servicio->Nombre,
-            'precio'   => $servicio->Precio,
-        ]);
-
-        DB::commit();
-
-        return response()->json([
-            'status' => 'success',
-            'message' => '¡Compra realizada con éxito! Revisa tu correo.'
-        ]);
-
-    } catch (\Exception $e) {
-        DB::rollBack();
-        return response()->json(['error' => $e->getMessage()], 500);
-    }
-}
 }

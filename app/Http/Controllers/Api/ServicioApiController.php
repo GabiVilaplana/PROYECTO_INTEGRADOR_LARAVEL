@@ -18,7 +18,8 @@ class ServicioApiController extends Controller
             'proveedor',
             'fotoPrincipal',
             'fotos',
-            'disponibilidades'
+            'disponibilidades',
+            'zona'
         ])->where('Activo', true)->get();
 
         return response()->json($servicios);
@@ -105,7 +106,7 @@ class ServicioApiController extends Controller
             ->where('radio_km', '>', 0)
             ->having('distancia', '<=', DB::raw('radio_km'))
             ->orderBy('distancia')
-            ->with(['categoria', 'proveedor', 'fotoPrincipal'])
+            ->with(['categoria', 'proveedor', 'fotoPrincipal', 'zona'])
             ->limit(50)
             ->get();
 
@@ -128,7 +129,7 @@ class ServicioApiController extends Controller
             ], 404);
         }
 
-        $servicios = Servicio::with(['categoria', 'proveedor', 'fotoPrincipal'])
+        $servicios = Servicio::with(['categoria', 'proveedor', 'fotoPrincipal', 'zona'])
             ->where('idCategoria', $idCategoria)
             ->where('Activo', true)
             ->get();

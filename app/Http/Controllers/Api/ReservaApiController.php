@@ -46,6 +46,12 @@ class ReservaApiController extends Controller
             ], 422);
         }
 
+        if ($usuario->IDUsuario === $servicio->idProveedor) {
+            return response()->json([
+                'message' => 'No puedes reservar tu propio servicio.'
+            ], 422);
+        }
+
         $reserva = DB::transaction(function () use ($usuario, $servicio, $request) {
             $reserva = Reserva::create([
                 'idUsuario' => $usuario->IDUsuario,

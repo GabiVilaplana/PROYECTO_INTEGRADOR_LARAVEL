@@ -125,13 +125,13 @@
                 const div = document.createElement('div');
                 div.className = 'flex items-start gap-3';
                 div.innerHTML = `
-                <input type="file" name="fotos[]" accept="image/*" class="mt-1">
-                <label class="inline-flex items-center">
-                    <input type="radio" name="foto_principal" value="${fotoIndex}">
-                    <span class="ml-2 text-sm">Principal</span>
-                </label>
-                <button type="button" onclick="removeFoto(this)" class="text-red-500 hover:text-red-700">×</button>
-            `;
+                                <input type="file" name="fotos[]" accept="image/*" class="mt-1">
+                                <label class="inline-flex items-center">
+                                    <input type="radio" name="foto_principal" value="${fotoIndex}">
+                                    <span class="ml-2 text-sm">Principal</span>
+                                </label>
+                                <button type="button" onclick="removeFoto(this)" class="text-red-500 hover:text-red-700">×</button>
+                            `;
                 container.appendChild(div);
                 fotoIndex++;
             }

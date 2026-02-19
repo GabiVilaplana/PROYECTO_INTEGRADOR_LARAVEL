@@ -17,7 +17,7 @@ class ProveedorApiController extends Controller
     {
         $usuario = $request->user();
 
-        $servicios = Servicio::with(['categoria', 'fotoPrincipal', 'valoraciones'])
+        $servicios = Servicio::with(['categoria', 'fotoPrincipal', 'valoraciones', 'zona'])
             ->where('idProveedor', $usuario->IDUsuario)
             ->orderBy('created_at', 'desc')
             ->get();
@@ -36,15 +36,27 @@ class ProveedorApiController extends Controller
             'idCategoria' => 'required|exists:categorias,IDCategoria',
             'idZona' => 'nullable|exists:zonas,id',
             'Direccion' => 'nullable|string|max:255',
-            'Latitud' => 'nullable|numeric',
-            'Longitud' => 'nullable|numeric',
+            'lat' => 'nullable|numeric',
+            'lng' => 'nullable|numeric',
             'foto' => 'sometimes|image|mimes:jpeg,png,jpg,webp|max:8096',
             'fotos.*' => 'sometimes|image|mimes:jpeg,png,jpg,webp|max:8096',
+            'disponibilidad' => 'nullable|string',
         ]);
 
         $usuario = $request->user();
 
-        $servicio = DB::transaction(function () use ($request, $usuario) {
+        $lat = $request->lat;
+        $lng = $request->lng;
+
+        if ($request->filled('idZona') && (empty($lat) || empty($lng))) {
+            $zona = \App\Models\Zona::find($request->idZona);
+            if ($zona) {
+                $lat = $zona->lat;
+                $lng = $zona->lng;
+            }
+        }
+
+        $servicio = DB::transaction(function () use ($request, $usuario, $lat, $lng) {
             $servicio = Servicio::create([
                 'Nombre' => $request->Nombre,
                 'Descripcion' => $request->Descripcion,
@@ -54,8 +66,8 @@ class ProveedorApiController extends Controller
                 'idZona' => $request->idZona,
                 'idProveedor' => $usuario->IDUsuario,
                 'Direccion' => $request->Direccion,
-                'Latitud' => $request->Latitud,
-                'Longitud' => $request->Longitud,
+                'lat' => $lat,
+                'lng' => $lng,
                 'Activo' => true,
             ]);
 
@@ -77,19 +89,26 @@ class ProveedorApiController extends Controller
                 ]);
             }
 
-            // Manejar galería de fotos
-            if ($request->hasFile('fotos')) {
-                foreach ($request->file('fotos') as $foto) {
-                    $path = $foto->store('servicios', 'public');
-                    ServicioFoto::create([
-                        'idServicio' => $servicio->IDServicio,
-                        'RutaFoto' => $path,
-                        'EsPrincipal' => false,
-                    ]);
+            // Manejar disponibilidad
+            if ($request->filled('disponibilidad')) {
+                $disponibilidades = is_string($request->disponibilidad)
+                    ? json_decode($request->disponibilidad, true)
+                    : $request->disponibilidad;
+
+                if (is_array($disponibilidades)) {
+                    foreach ($disponibilidades as $disp) {
+                        ServicioDisponibilidad::create([
+                            'idServicio' => $servicio->IDServicio,
+                            'dia_semana' => $disp['dia_semana'],
+                            'hora_inicio' => $disp['hora_inicio'],
+                            'hora_fin' => $disp['hora_fin'],
+                            'activo' => $disp['activo'] ?? true,
+                        ]);
+                    }
                 }
             }
 
-            return $servicio->load(['categoria', 'fotoPrincipal']);
+            return $servicio->load(['categoria', 'fotoPrincipal', 'disponibilidades']);
         });
 
         return response()->json($servicio, 201);
@@ -106,11 +125,12 @@ class ProveedorApiController extends Controller
             'idCategoria' => 'sometimes|exists:categorias,IDCategoria',
             'idZona' => 'nullable|exists:zonas,id',
             'Direccion' => 'nullable|string|max:255',
-            'Latitud' => 'nullable|numeric',
-            'Longitud' => 'nullable|numeric',
+            'lat' => 'nullable|numeric',
+            'lng' => 'nullable|numeric',
             'Activo' => 'sometimes|boolean',
             'foto' => 'sometimes|image|mimes:jpeg,png,jpg,webp|max:8096',
             'fotos.*' => 'sometimes|image|mimes:jpeg,png,jpg,webp|max:8096',
+            'disponibilidad' => 'nullable|string',
         ]);
 
         $usuario = $request->user();
@@ -118,6 +138,17 @@ class ProveedorApiController extends Controller
         $servicio = Servicio::where('IDServicio', $id)
             ->where('idProveedor', $usuario->IDUsuario)
             ->firstOrFail();
+
+        $lat = $request->lat ?? $servicio->lat;
+        $lng = $request->lng ?? $servicio->lng;
+
+        if ($request->filled('idZona') && ($request->idZona != $servicio->idZona) && (!$request->has('lat') || !$request->has('lng'))) {
+            $zona = \App\Models\Zona::find($request->idZona);
+            if ($zona) {
+                $lat = $zona->lat;
+                $lng = $zona->lng;
+            }
+        }
 
         $servicio->update($request->only([
             'Nombre',
@@ -127,10 +158,12 @@ class ProveedorApiController extends Controller
             'idCategoria',
             'idZona',
             'Direccion',
-            'Latitud',
-            'Longitud',
             'Activo'
         ]));
+
+        $servicio->lat = $lat;
+        $servicio->lng = $lng;
+        $servicio->save();
 
         if ($request->hasFile('foto')) {
             // Eliminar foto principal anterior o demarcarla?
@@ -138,7 +171,7 @@ class ProveedorApiController extends Controller
             ServicioFoto::where('idServicio', $servicio->IDServicio)
                 ->where('EsPrincipal', true)
                 ->update(['EsPrincipal' => false]);
-                
+
             $path = $request->file('foto')->store('servicios', 'public');
             ServicioFoto::create([
                 'idServicio' => $servicio->IDServicio,
@@ -158,7 +191,29 @@ class ProveedorApiController extends Controller
             }
         }
 
-        return response()->json($servicio->load(['categoria', 'fotoPrincipal']));
+        // Manejar disponibilidad
+        if ($request->has('disponibilidad')) {
+            $disponibilidades = is_string($request->disponibilidad)
+                ? json_decode($request->disponibilidad, true)
+                : $request->disponibilidad;
+
+            if (is_array($disponibilidades)) {
+                // Sincronizar: eliminar las anteriores y añadir las nuevas
+                ServicioDisponibilidad::where('idServicio', $servicio->IDServicio)->delete();
+
+                foreach ($disponibilidades as $disp) {
+                    ServicioDisponibilidad::create([
+                        'idServicio' => $servicio->IDServicio,
+                        'dia_semana' => $disp['dia_semana'],
+                        'hora_inicio' => $disp['hora_inicio'],
+                        'hora_fin' => $disp['hora_fin'],
+                        'activo' => $disp['activo'] ?? true,
+                    ]);
+                }
+            }
+        }
+
+        return response()->json($servicio->load(['categoria', 'fotoPrincipal', 'disponibilidades']));
     }
 
     // Eliminar servicio
@@ -193,7 +248,7 @@ class ProveedorApiController extends Controller
     {
         $usuario = $request->user();
 
-        $reservas = Reserva::with(['usuario', 'detalles.servicio'])
+        $reservas = Reserva::with(['usuario', 'detalles.servicio.zona'])
             ->whereHas('detalles.servicio', function ($query) use ($usuario) {
                 $query->where('idProveedor', $usuario->IDUsuario);
             })
@@ -227,6 +282,31 @@ class ProveedorApiController extends Controller
             'total_reservas' => $totalReservas,
             'reservas_pendientes' => $reservasPendientes,
             'ingresos_totales' => $ingresosTotales,
+        ]);
+    }
+
+    // Actualizar estado de una reserva (para el proveedor)
+    public function updateReservaEstado(Request $request, $id)
+    {
+        $request->validate([
+            'Estado' => 'required|in:Confirmada,Cancelada',
+        ]);
+
+        $usuario = $request->user();
+
+        // Buscar la reserva asegurándose de que pertenece a un servicio del proveedor
+        $reserva = Reserva::where('IDReserva', $id)
+            ->whereHas('detalles.servicio', function ($query) use ($usuario) {
+                $query->where('idProveedor', $usuario->IDUsuario);
+            })
+            ->firstOrFail();
+
+        $reserva->Estado = $request->Estado;
+        $reserva->save();
+
+        return response()->json([
+            'message' => 'Estado de la reserva actualizado correctamente.',
+            'reserva' => $reserva->load(['usuario', 'detalles.servicio'])
         ]);
     }
 }

@@ -12,6 +12,7 @@ use App\Http\Controllers\Api\RolApiController;
 use App\Http\Controllers\Api\ServicioApiController;
 use App\Http\Controllers\Api\ServicioDisponibilidadApiController;
 use App\Http\Controllers\Api\ServicioFotoApiController;
+use App\Http\Controllers\Api\TarjetaController;
 use App\Http\Controllers\Api\UsuarioApiController;
 use App\Http\Controllers\Api\ValoracionApiController;
 use App\Http\Controllers\Api\ZonaApiController;
@@ -126,6 +127,13 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::put('/{id}', [PagoApiController::class, 'update']);
     });
 
+    // Gestión de Tarjetas
+    Route::prefix('tarjetas')->group(function () {
+        Route::get('/', [TarjetaController::class, 'index']);
+        Route::post('/', [TarjetaController::class, 'store']);
+        Route::delete('/{id}', [TarjetaController::class, 'destroy']);
+    });
+
     Route::prefix('proveedor')->group(function () {
         // Gestión de servicios
         Route::get('/servicios', [ProveedorApiController::class, 'servicios']);
@@ -135,6 +143,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
         // Reservas del proveedor
         Route::get('/reservas', [ProveedorApiController::class, 'reservas']);
+        Route::put('/reservas/{id}/estado', [ProveedorApiController::class, 'updateReservaEstado']);
 
         // Estadísticas
         Route::get('/estadisticas', [ProveedorApiController::class, 'estadisticas']);
