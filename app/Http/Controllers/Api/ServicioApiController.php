@@ -32,7 +32,8 @@ class ServicioApiController extends Controller
             'fotos',
             'fotoPrincipal',
             'valoraciones.usuario',
-            'disponibilidades'
+            'disponibilidades',
+            'zona'
         ])->findOrFail($id);
 
         return response()->json([
@@ -46,9 +47,11 @@ class ServicioApiController extends Controller
             'lat' => $servicio->lat,
             'lng' => $servicio->lng,
             'radio_km' => $servicio->radio_km,
+            'idZona' => $servicio->idZona,
 
             // Relaciones
             'categoria' => $servicio->categoria,
+            'zona' => $servicio->zona,
             'proveedor' => $servicio->proveedor,
             'fotos' => $servicio->fotos->map(function ($foto) {
                 return [

@@ -19,6 +19,7 @@ class Servicio extends Model
         'Duracion',
         'Activo',
         'idCategoria',
+        'idZona',
         'idProveedor',
         'lat',
         'lng',
@@ -34,6 +35,11 @@ class Servicio extends Model
     public function categoria()
     {
         return $this->belongsTo(Categoria::class, 'idCategoria', 'IDCategoria');
+    }
+
+    public function zona()
+    {
+        return $this->belongsTo(Zona::class, 'idZona', 'id');
     }
 
     public function proveedor()

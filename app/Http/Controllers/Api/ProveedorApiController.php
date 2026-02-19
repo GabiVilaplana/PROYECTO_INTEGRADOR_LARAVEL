@@ -34,10 +34,12 @@ class ProveedorApiController extends Controller
             'Precio' => 'required|numeric|min:0',
             'Duracion' => 'required|integer|min:1',
             'idCategoria' => 'required|exists:categorias,IDCategoria',
+            'idZona' => 'nullable|exists:zonas,id',
             'Direccion' => 'nullable|string|max:255',
             'Latitud' => 'nullable|numeric',
             'Longitud' => 'nullable|numeric',
-            'foto' => 'sometimes|image|mimes:jpeg,png,jpg|max:2048',
+            'foto' => 'sometimes|image|mimes:jpeg,png,jpg,webp|max:8096',
+            'fotos.*' => 'sometimes|image|mimes:jpeg,png,jpg,webp|max:8096',
         ]);
 
         $usuario = $request->user();
@@ -49,6 +51,7 @@ class ProveedorApiController extends Controller
                 'Precio' => $request->Precio,
                 'Duracion' => $request->Duracion,
                 'idCategoria' => $request->idCategoria,
+                'idZona' => $request->idZona,
                 'idProveedor' => $usuario->IDUsuario,
                 'Direccion' => $request->Direccion,
                 'Latitud' => $request->Latitud,
@@ -56,7 +59,7 @@ class ProveedorApiController extends Controller
                 'Activo' => true,
             ]);
 
-            // Manejar foto
+            // Manejar foto principal
             if ($request->hasFile('foto')) {
                 $path = $request->file('foto')->store('servicios', 'public');
                 ServicioFoto::create([
@@ -74,6 +77,18 @@ class ProveedorApiController extends Controller
                 ]);
             }
 
+            // Manejar galería de fotos
+            if ($request->hasFile('fotos')) {
+                foreach ($request->file('fotos') as $foto) {
+                    $path = $foto->store('servicios', 'public');
+                    ServicioFoto::create([
+                        'idServicio' => $servicio->IDServicio,
+                        'RutaFoto' => $path,
+                        'EsPrincipal' => false,
+                    ]);
+                }
+            }
+
             return $servicio->load(['categoria', 'fotoPrincipal']);
         });
 
@@ -89,10 +104,13 @@ class ProveedorApiController extends Controller
             'Precio' => 'sometimes|numeric|min:0',
             'Duracion' => 'sometimes|integer|min:1',
             'idCategoria' => 'sometimes|exists:categorias,IDCategoria',
+            'idZona' => 'nullable|exists:zonas,id',
             'Direccion' => 'nullable|string|max:255',
             'Latitud' => 'nullable|numeric',
             'Longitud' => 'nullable|numeric',
             'Activo' => 'sometimes|boolean',
+            'foto' => 'sometimes|image|mimes:jpeg,png,jpg,webp|max:8096',
+            'fotos.*' => 'sometimes|image|mimes:jpeg,png,jpg,webp|max:8096',
         ]);
 
         $usuario = $request->user();
@@ -107,11 +125,38 @@ class ProveedorApiController extends Controller
             'Precio',
             'Duracion',
             'idCategoria',
+            'idZona',
             'Direccion',
             'Latitud',
             'Longitud',
             'Activo'
         ]));
+
+        if ($request->hasFile('foto')) {
+            // Eliminar foto principal anterior o demarcarla?
+            // Por simplicidad, desmarcamos la anterior principal
+            ServicioFoto::where('idServicio', $servicio->IDServicio)
+                ->where('EsPrincipal', true)
+                ->update(['EsPrincipal' => false]);
+                
+            $path = $request->file('foto')->store('servicios', 'public');
+            ServicioFoto::create([
+                'idServicio' => $servicio->IDServicio,
+                'RutaFoto' => $path,
+                'EsPrincipal' => true,
+            ]);
+        }
+
+        if ($request->hasFile('fotos')) {
+            foreach ($request->file('fotos') as $foto) {
+                $path = $foto->store('servicios', 'public');
+                ServicioFoto::create([
+                    'idServicio' => $servicio->IDServicio,
+                    'RutaFoto' => $path,
+                    'EsPrincipal' => false,
+                ]);
+            }
+        }
 
         return response()->json($servicio->load(['categoria', 'fotoPrincipal']));
     }

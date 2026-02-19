@@ -35,9 +35,4 @@ return [
         ],
     ],
 
-    'n8n' => [
-        'compra_url' => env('N8N_WEBHOOK_COMPRA_URL'),
-        'chat_url' => env('N8N_WEBHOOK_CHAT_URL'),
-    ],
-
 ];

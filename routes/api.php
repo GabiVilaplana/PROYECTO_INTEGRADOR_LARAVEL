@@ -15,6 +15,7 @@ use App\Http\Controllers\Api\ServicioFotoApiController;
 use App\Http\Controllers\Api\UsuarioApiController;
 use App\Http\Controllers\Api\ValoracionApiController;
 use App\Http\Controllers\Api\ZonaApiController;
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ServicioController;
 
@@ -23,7 +24,7 @@ use App\Http\Controllers\ServicioController;
 // ============================================
 
 // Autenticación
-Route::post('/login', [AuthApiController::class, 'login']);
+Route::post('login', [AuthenticatedSessionController::class, 'store']);
 Route::post('/logout', [AuthApiController::class, 'logout']);
 Route::get('/check', [AuthApiController::class, 'check']);
 Route::get('/faqs', [FaqApiController::class, 'index']);
