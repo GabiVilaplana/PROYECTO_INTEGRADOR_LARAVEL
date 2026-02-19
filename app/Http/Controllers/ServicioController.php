@@ -9,7 +9,6 @@ use App\Models\ServicioDisponibilidad;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use App\Http\Controllers\Api\N8nService; // Importamos tu nueva clase
 use App\Models\Pago;
 use App\Models\Reserva;
 
