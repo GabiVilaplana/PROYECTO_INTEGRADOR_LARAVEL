@@ -9,7 +9,6 @@ use App\Models\ServicioDisponibilidad;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use App\Http\Controllers\Api\N8nService; // Importamos tu nueva clase
 use App\Models\Pago;
 use App\Models\Reserva;
 
@@ -369,15 +368,6 @@ class ServicioController extends Controller
                 return $detalle->servicio->Nombre; 
             })->implode(', ');
 
-            // 5. Enviar a n8n
-            // dd(env('N8N_WEBHOOK_COMPRA_URL')); 
-
-            N8nService::enviarConfirmacionCompra([
-                'email'    => $reserva->usuario->email, // Asegúrate si en Usuario es 'email' o 'Email'
-                'nombre'   => $reserva->usuario->Nombre,
-                'servicio' => $nombresServicios,
-                'precio'   => $pago->Importe,
-            ]);
 
             DB::commit();
 
@@ -433,13 +423,6 @@ class ServicioController extends Controller
             'FechaPago'  => now(),
         ]);
 
-        // 5. Notificar a n8n
-        N8nService::enviarConfirmacionCompra([
-            'email'    => $user->email,
-            'nombre'   => $user->Nombre,
-            'servicio' => $servicio->Nombre,
-            'precio'   => $servicio->Precio,
-        ]);
 
         DB::commit();
 

@@ -1,8 +1,8 @@
 <?php
 
 use App\Http\Controllers\Api\AuthApiController;
-use App\Http\Controllers\Api\CategoriaApiController;
 use App\Http\Controllers\Api\ChatbotApiController;
+use App\Http\Controllers\Api\CategoriaApiController;
 use App\Http\Controllers\Api\FaqApiController;
 use App\Http\Controllers\Api\MensajeApiController;
 use App\Http\Controllers\Api\PagoApiController;
@@ -70,12 +70,6 @@ Route::prefix('zonas')->group(function () {
     Route::post('/servicios/buscar', [ServicioApiController::class, 'buscar']);
 });
 
-// Chatbot
-Route::prefix('chatbot')->group(function () {
-    Route::get('/catalogo', [ChatbotApiController::class, 'getCatalogo']);
-    Route::post('/reserva', [ChatbotApiController::class, 'consultarReserva']);
-    Route::post('/chat', [ChatbotApiController::class, 'hablarConChatbot']);
-});
 
 
 Route::middleware('auth:sanctum')->group(function () {
@@ -150,5 +144,11 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 Route::post('/confirmar-pago', [ServicioController::class, 'confirmarPago']);
 Route::middleware('auth:sanctum')->post('/compra-rapida', [ServicioController::class, 'compraRapida']);
+
+// Chatbot
+Route::prefix('chatbot')->group(function () {
+    Route::get('/servicios', [ChatbotApiController::class, 'servicios']);
+    Route::post('/reserva-status', [ChatbotApiController::class, 'reservaStatus']);
+});
 
 
