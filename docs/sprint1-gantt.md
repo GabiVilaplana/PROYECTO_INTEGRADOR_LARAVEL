@@ -1,15 +1,17 @@
-# Cronograma Gantt
+# Planificación Temporal y Cronograma
 
-**Objetivo:** Planificar las actividades del sprint con una visión temporal.
+**Objetivo:** Definir la hoja de ruta cronológica del proyecto para cumplir con los plazos de entrega.
 
-- Creación de un diagrama de Gantt con las tareas principales:
-  - Configuración de entornos
-  - Creación del tablero de proyectos
-  - Desarrollo de la página inicial
-  - Formulario de contacto y validación
-- Estimación de duración para cada tarea.
-- Identificación de dependencias entre tareas.
+## Implementación Técnica:
 
-**Entregables:**
-- Cronograma inicial con GanttProject exportado.
-- Clarificación de dependencias y priorización de tareas.
+### 1. Cronograma Inicial (GanttProject)
+Al comienzo del proyecto, utilizamos **GanttProject** para estimar la duración de las fases principales y las dependencias entre hitos críticos.
+
+-   **Hitos definidos**: Diseño de base de datos, maquetación inicial, migración a Laravel y despliegue final.
+-   **Gestión de Dependencias**: Identificación de tareas que bloqueaban otras (e.g., la API debía estar lista antes que el frontend de Vue).
+
+### 2. Transición a Gestión Ágil
+Conforme el proyecto avanzó hacia un modelo más iterativo, decidimos prescindir del diagrama de Gantt estático a favor de la flexibilidad que ofrece **GitHub Projects**.
+
+-   **Razón del cambio**: Los diagramas de Gantt se volvían difíciles de mantener ante cambios rápidos en los requerimientos.
+-   **Resultado**: Centralización de toda la gestión temporal en hitos (*milestones*) de GitHub.

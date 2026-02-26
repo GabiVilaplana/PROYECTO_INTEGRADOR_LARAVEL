@@ -1,16 +1,20 @@
-# Tablero de proyectos
+# Tablero de Proyectos y Gestión de Tareas
 
-**Objetivo:** Visualizar y organizar las tareas de manera clara.
+**Objetivo:** Organizar el flujo de trabajo y visualizar el progreso del equipo.
 
-- Creación del tablero de proyectos con columnas:
-  - *Backlog*
-  - *To Do*
-  - *In Progress*
-  - *Done*
-- Asignación de tareas a miembros del equipo.
-- Estimación de tiempo por tarea (en horas o puntos).
-- Etiquetas por tipo de tarea: *Frontend*, *Backend*, *Documentación*, *Testing*.
+## Implementación Técnica:
 
-**Entregables:**
-- Tablero de proyectos accesible a todos los miembros.
-- Tareas iniciales asignadas con fechas límite.
+### 1. GitHub Projects (Kanban)
+Aunque inicialmente se evaluaron otras herramientas, nos decantamos por **GitHub Projects** por su integración nativa con los issues y pull requests de nuestro repositorio.
+
+### 2. Estructura del Tablero
+El flujo de trabajo se dividió en las siguientes columnas:
+
+-   **Backlog**: Tareas pendientes por definir o priorizar.
+-   **To Do**: Tareas listas para ser iniciadas en el sprint actual.
+-   **In Progress**: Tareas en desarrollo activo.
+-   **Testing/Review**: Tareas pendientes de verificación técnica o funcional.
+-   **Done**: Tareas completadas y verificadas.
+
+### 3. Gestión de Issues
+Cada tarea se documentó como un **GitHub Issue**, incluyendo etiquetas de categoría (`frontend`, `backend`, `bug`) y asignaciones individuales para mantener la responsabilidad clara.

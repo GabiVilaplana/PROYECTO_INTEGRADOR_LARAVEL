@@ -1,19 +1,19 @@
-# Entorno y configuración
+# Configuración del Entorno y Evolución del Proyecto
 
-**Objetivo:** Tener un entorno estable para el desarrollo y pruebas.
+**Objetivo:** Establecer una base sólida para el desarrollo colaborativo y el despliegue.
 
-## Entorno local
-- Instalación de IDE: VS Code, PyCharm o la herramienta que prefiera cada desarrollador.
-- Configuración de Git y GitHub para control de versiones.
-- Instalación de dependencias necesarias (Node.js, Python, MkDocs, etc.).
-- Configuración de servidor local para pruebas: `mkdocs serve`.
+## Implementación Técnica:
 
-## Entorno remoto
-- Creación del repositorio en GitHub.
-- Configuración de GitHub Pages para despliegue inicial.
-- Creación de ramas principales: `main` y `develop`.
-- Configuración de GitHub Actions si se desea automatizar el despliegue.
+### 1. Evolución del Nombre
+Se nos ocurrió a medida que trabajabamos en el primer sprint. La página iba cogiendo forma y tarde o temprano tendríamos que definir un nombre y un logo que actuase como marca de identidad de nuestro proyecto. Tras pensar un poco, **'TaskLink'** nos pareció muy indicado, ya que junta los dos conceptos que intentamos relacionar en nuestra labor; el trabajo, y conectar con personas.
 
-**Entregables:**
-- Entorno local completamente funcional.
-- Repositorio remoto con estructura inicial MkDocs.
+### 2. Entorno de Desarrollo (Local)
+
+Se configuró un entorno basado en **Docker** para garantizar la paridad entre desarrolladores.
+
+- **Contenedores**: Se utilizaron servicios para PHP-FPM, Nginx, MySQL y Redis.
+- **Variables de Entorno**: Gestión mediante el archivo `.env` para configurar claves de API, credenciales de base de datos y puertos.
+
+### 3. Entorno Remoto
+
+Se configuró un servidor remoto para pruebas de integración continua, asegurando que el código fuera funcional en un entorno real desde el inicio.

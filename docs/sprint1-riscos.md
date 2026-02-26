@@ -2,19 +2,23 @@
 title: Riesgos laborales para programadores de ecommerce 💻
 description: Identificación y prevención de riesgos físicos, ambientales, psicosociales y tecnológicos en el desarrollo de software de comercio electrónico.
 tags:
+
   - Prevención de riesgos laborales
   - Programación
   - Ecommerce
   - Ergonomía
   - Ciberseguridad
 authors:
+
   - nombre: Equipo de Prevención IT
     title: Especialistas en seguridad laboral y bienestar digital
 date: 2025-10-24
 categories:
+
   - Seguridad laboral
   - Bienestar en el trabajo
 hide:
+
   - navigation
   - toc
 ---
