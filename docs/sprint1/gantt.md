@@ -20,17 +20,7 @@ El siguiente diagrama muestra la planificación de nuestras 6 iteraciones clave,
     - **Iteración 4-5:** Desarrollo del Frontend (Vue.js) e Integraciones externas.
     - **Iteración 6:** Pruebas finales y Despliegue de la solución.
 
----
 
-## 🚀 3. Hitos Críticos y Dependencias
-
-La planificación temporal nos permitió identificar tareas bloqueantes esenciales para el éxito del proyecto:
-
-1.  **Arquitectura de Base de Datos:** Debía estar finalizada antes de cualquier desarrollo de API.
-2.  **API REST (Backend):** Actuó como el contrato necesario para que el equipo de Frontend pudiera trabajar de forma independiente.
-3.  **Despliegue Continuo:** La configuración temprana del entorno remoto aseguró que no hubiera sorpresas en la fase final de entrega.
-
----
 
 > [!NOTE]
 > **Lección aprendida:** La planificación con Gantt nos dio la base necesaria para entender la envergadura del proyecto, mientras que la agilidad de GitHub nos dio la velocidad para completarlo.
