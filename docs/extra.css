@@ -1,0 +1,12 @@
+.md-logo img {
+  width: 150px !important;
+  height: 75px !important;
+}
+.md-header__button.md-logo {
+  height: auto !important;
+  margin: 10px !important;
+}
+.md-nav__title .md-logo img {
+  width: 100px !important;
+  height: 50px !important;
+}
