@@ -19,8 +19,8 @@ A diferencia de los tokens JWT tradicionales que pueden ser interceptados más f
 Para que la aplicación sepa _quién_ está navegando en todo momento, utilizamos **Pinia**, el almacén de estados oficial de Vue:
 
 !!! abstract "Flujo de Datos del Usuario"
-_ **Persistencia Reactiva:** Almacenamos el objeto `user` y su rol en un store centralizado accesible desde cualquier componente.
-_ **Detección de Sesión:** Al arrancar la aplicación (`App.vue`), realizamos una petición silenciosa a `/api/user`. Si hay éxito, recuperamos la sesión; si no, mantenemos al usuario como "invitado". \* **UI Dinámica:** Gracias a esta sincronización, opciones como "Subir Servicio" o "Mis Reservas" aparecen o desaparecen en tiempo real según el estado del login.
+- **Persistencia Reactiva:** Almacenamos el objeto `user` y su rol en un store centralizado accesible desde cualquier componente.
+- **Detección de Sesión:** Al arrancar la aplicación (`App.vue`), realizamos una petición silenciosa a `/api/user`. Si hay éxito, recuperamos la sesión; si no, mantenemos al usuario como "invitado". \* **UI Dinámica:** Gracias a esta sincronización, opciones como "Subir Servicio" o "Mis Reservas" aparecen o desaparecen en tiempo real según el estado del login.
 
 ---
 

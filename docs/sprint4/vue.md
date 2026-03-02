@@ -20,8 +20,8 @@ Hemos seleccionado las herramientas más modernas para garantizar una base sóli
 La gestión de las rutas es fundamental para la experiencia SPA:
 
 !!! abstract "Gestión de Estado de Navegación"
-_ **Lazy Loading:** Las vistas pesadas (como el Dashboard o la edición de Perfil) solo se cargan cuando el usuario navega a ellas, reduciendo el peso del bundle inicial hasta en un 40%.
-_ **History Mode:** Configurado para utilizar URLs limpias (ej. `/servicios/12`) sin el carácter `#`, mejorando tanto el SEO como la estética de compartir enlaces. \* **Navigation Guards:** Protegemos las rutas sensibles verificando el estado del usuario antes de permitir el acceso a áreas restringidas.
+- **Lazy Loading:** Las vistas pesadas (como el Dashboard o la edición de Perfil) solo se cargan cuando el usuario navega a ellas, reduciendo el peso del bundle inicial hasta en un 40%.
+- **History Mode:** Configurado para utilizar URLs limpias (ej. `/servicios/12`) sin el carácter `#`, mejorando tanto el SEO como la estética de compartir enlaces. \* **Navigation Guards:** Protegemos las rutas sensibles verificando el estado del usuario antes de permitir el acceso a áreas restringidas.
 
 ---
 
