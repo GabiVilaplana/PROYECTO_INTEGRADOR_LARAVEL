@@ -28,6 +28,7 @@ use App\Http\Controllers\ServicioController;
 Route::post('login', [AuthenticatedSessionController::class, 'store']);
 Route::post('/logout', [AuthApiController::class, 'logout']);
 Route::get('/check', [AuthApiController::class, 'check']);
+
 Route::get('/faqs', [FaqApiController::class, 'index']);
 Route::post('/faqs', [FaqApiController::class, 'store']);
 Route::put('/faqs/{id}', [FaqApiController::class, 'update']);

@@ -7,8 +7,13 @@ use App\Http\Controllers\ValoracionServicioController;
 use App\Models\Categoria;
 use App\Models\Servicio;
 use App\Models\Zona;
+use App\Http\Controllers\Api\SocialAuthApiController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\DB;
+
+// Google OAuth
+Route::get('/auth/google', [SocialAuthApiController::class, 'redirectToGoogle']);
+Route::get('/auth/google/callback', [SocialAuthApiController::class, 'handleGoogleCallback']);
 
 // Ruta para ver servicios por zona
 Route::get('/zona/{slug}', function ($slug) {

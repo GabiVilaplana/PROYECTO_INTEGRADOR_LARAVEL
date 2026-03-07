@@ -22,7 +22,9 @@ class Usuario extends Authenticatable
         'Apellidos',
         'email',
         'password',  // ¡esta es la columna real!
-
+        'google_id',
+        'google_token',
+        'google_refresh_token',
         'idRol',
         'Activo',
         'FotoPerfil',
