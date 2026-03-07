@@ -43,9 +43,24 @@ class SocialAuthApiController extends Controller
                     'google_refresh_token' => $googleUser->refreshToken,
                 ]);
             } else {
-                // Si el usuario no existe, redirigir al login con un error
-                $frontendUrl = env('FRONTEND_URL', 'http://localhost:5173');
-                return redirect()->away($frontendUrl . '/login?error=google_user_not_found');
+                // Si el usuario no existe, crearlo (auto-registro)
+                $fullName = $googleUser->name;
+                $nameParts = explode(' ', $fullName, 2);
+                $nombre = $nameParts[0];
+                $apellidos = $nameParts[1] ?? '';
+
+                $user = Usuario::create([
+                    'Nombre' => $nombre,
+                    'Apellidos' => $apellidos,
+                    'email' => $googleUser->email,
+                    'google_id' => $googleUser->id,
+                    'google_token' => $googleUser->token,
+                    'google_refresh_token' => $googleUser->refreshToken,
+                    'idRol' => 2, // Rol de cliente por defecto
+                    'Activo' => true,
+                    // No necesita contraseña real para social login, pero el modelo requiere una
+                    'password' => \Illuminate\Support\Str::random(16),
+                ]);
             }
 
             // Iniciar sesión (session-based)
@@ -53,9 +68,9 @@ class SocialAuthApiController extends Controller
             request()->session()->regenerate();
             request()->session()->save(); // Asegurar que la sesión se guarda antes de redirigir
 
-            // Redirigir al frontend
-            $frontendUrl = env('FRONTEND_URL', 'http://localhost:5173');
-            return redirect()->away($frontendUrl);
+            // Redirigir al frontend (a la vista de callback específica)
+            $frontendUrl = config('app.frontend_url');
+            return redirect()->away($frontendUrl . '/auth/google/callback');
 
         } catch (\Exception $e) {
             return response()->json([
