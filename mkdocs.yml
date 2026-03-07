@@ -6,44 +6,44 @@ nav:
   - "Inici": "index.md"
   - "Sprint":
       - "1️⃣ Sprint":
-          - "Entorn i entorns": "sprint1-entorno.md"
-          - "Tauler de projectes": "sprint1-tauler.md"
-          - "Cronograma Gantt": "sprint1-gantt.md"
-          - "Assignació de rols i tasques": "sprint1-rols.md"
-          - "Riscos Laborals": "sprint1-riscos.md"
-          - "Pàgina inicial i formulari": "sprint1-formulari.md"
+          - "Entorn i entorns": "sprint1/entorno.md"
+          - "Tauler de projectes": "sprint1/tauler.md"
+          - "Cronograma Gantt": "sprint1/gantt.md"
+          - "Assignació de rols i tasques": "sprint1/rols.md"
+          - "Riscos Laborals": "sprint1/riscos.md"
+          - "Pàgina inicial i formulari": "sprint1/formulari.md"
       - "2️⃣ Sprint":
-          - "Importació de productes": "sprint2-importacio.md"
-          - "Autenticació d'usuaris": "sprint2-autenticacio.md"
-          - "Comentaris i valoracions": "sprint2-comentaris.md"
-          - "Backups i desplegament": "sprint2-backups.md"
+          - "Importació de productes": "sprint2/importacio.md"
+          - "Autenticació d'usuaris": "sprint2/autenticacio.md"
+          - "Comentaris i valoracions": "sprint2/comentaris.md"
+          - "Backups i desplegament": "sprint2/backups.md"
       - "3️⃣ Sprint":
-          - "Servidor Laravel (MVC)": "sprint3-laravel.md"
-          - "API REST": "sprint3-api.md"
-          - "Disseny responsiu": "sprint3-responsivitat.md"
-          - "Proves i documentació": "sprint3-proves.md"
+          - "Servidor Laravel (MVC)": "sprint3/laravel.md"
+          - "API REST": "sprint3/api.md"
+          - "Disseny responsiu": "sprint3/responsivitat.md"
+          - "Proves i documentació": "sprint3/proves.md"
       - "4️⃣ Sprint":
-          - "SPA amb Vue.js": "sprint4-vue.md"
-          - "Autenticació via API": "sprint4-autenticacio-api.md"
-          - "Rols i permisos": "sprint4-rols.md"
-          - "Guia d'usuari": "sprint4-guia.md"
+          - "SPA amb Vue.js": "sprint4/vue.md"
+          - "Autenticació via API": "sprint4/autenticacio-api.md"
+          - "Rols i permisos": "sprint4/rols.md"
+          - "Guia d'usuari": "sprint4/guia.md"
       - "5️⃣ Sprint":
-          - "Integració OAuth2": "sprint5-oauth.md"
-          - "Swagger API Docs": "sprint5-swagger.md"
-          - "Cues i Processos": "sprint5-cues.md"
-          - "Docker i CI/CD": "sprint5-docker.md"
+          - "Integració OAuth2": "sprint5/oauth.md"
+          - "Swagger API Docs": "sprint5/swagger.md"
+          - "Cues i Processos": "sprint5/cues.md"
+          - "Docker i CI/CD": "sprint5/docker.md"
       - "6️⃣ Sprint":
-          - "Desplegament Docker": "sprint6-desplegament.md"
-          - "Connexió HTTPS": "sprint6-https.md"
-          - "Manual tècnic": "sprint6-manual.md"
-          - "Validació final": "sprint6-validacio.md"
+          - "Desplegament Docker": "sprint6/desplegament.md"
+          - "Connexió HTTPS": "sprint6/https.md"
+          - "Manual tècnic": "sprint6/manual.md"
+          - "Validació final": "sprint6/validacio.md"
 
 repo_url: "https://GabiVilaplana.github.io/PROYECTO_INTEGRADOR_LARAVEL/"
 repo_name: "GitHub"
 
 theme:
   language: ca
-  favicon: imagenes/favicon.png
+  favicon: imagenes/icono.png
   name: material
   palette:
     - scheme: default
@@ -61,7 +61,7 @@ theme:
   font:
     text: Roboto
     code: Roboto Mono
-  logo: "imagenes/logofp.png"
+  logo: "imagenes/logo.png"
   features:
     - header.autohide
     - toc.integrate
@@ -84,6 +84,7 @@ plugins:
 
 markdown_extensions:
   - attr_list
+  - md_in_html
   - admonition
   - pymdownx.tasklist:
       custom_checkbox: true
@@ -108,3 +109,6 @@ markdown_extensions:
       toc_depth: 3
 
 copyright: 2025-2026  Alex, Gabi - Licencia CC BY-NC-SA
+
+extra_css:
+  - extra.css
