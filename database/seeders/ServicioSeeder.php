@@ -18,15 +18,15 @@ class ServicioSeeder extends Seeder
         $peluquero = Categoria::where('Nombre', 'Peluquero')->first();
         $profesor = Categoria::where('Nombre', 'Profesor')->first();
 
-        $proveedor = Usuario::whereHas('rol', function($q){
-            $q->where('Nombre','creadorServicio');
+        $proveedor = Usuario::whereHas('rol', function ($q) {
+            $q->where('Nombre', 'creadorServicio');
         })->first();
 
         if (!$limpieza || !$jardinero || !$disenador || !$mecanico || !$peluquero || !$profesor || !$proveedor) {
             throw new \Exception('Faltan categorías o proveedor para el Seeder de servicios.');
         }
 
-        Servicio::insert([
+        $servicios = [
             [
                 'Nombre' => 'Limpieza Integral Hogar',
                 'Descripcion' => 'Limpieza completa de toda la casa incluyendo cocina y baño',
@@ -99,6 +99,10 @@ class ServicioSeeder extends Seeder
                 'lng' => -3.819618,
                 'radio_km' => 15,
             ],
-        ]);
+        ];
+
+        foreach ($servicios as $servicio) {
+            Servicio::updateOrCreate(['Nombre' => $servicio['Nombre']], $servicio);
+        }
     }
 }

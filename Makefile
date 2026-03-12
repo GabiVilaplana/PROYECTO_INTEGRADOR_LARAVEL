@@ -25,7 +25,7 @@ install:
 		  composer create-project laravel/laravel /tmp/laravel; \
 		  shopt -s dotglob; \
 		  cp -an /tmp/laravel/* /var/www/html/'; \
-	fi
+		fi
 	cp -n .env.example .env || true
 	docker compose run --rm app php artisan key:generate
 	docker compose run --rm app php artisan storage:link
@@ -37,7 +37,7 @@ populate:
 	docker compose run --rm app php artisan db:seed
 
 test:
-	docker compose run --rm app php artisan test -q
+	docker compose run --rm -e APP_ENV=testing -e DB_CONNECTION=sqlite -e DB_DATABASE=/tmp/test.sqlite app bash -c "touch /tmp/test.sqlite && php artisan test"
 
 artisan:
 	@docker compose run --rm app php artisan $(CMD)

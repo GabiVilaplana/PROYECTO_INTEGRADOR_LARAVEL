@@ -13,15 +13,15 @@ class UsuarioFactory extends Factory
     public function definition()
     {
         // Escoger rol usuario por defecto para los aleatorios
-        $rolUsuario = Rol::where('Nombre', 'usuario')->first()->IDRol;
+        $rolUsuario = Rol::firstOrCreate(['Nombre' => 'usuario'])->IDRol;
 
         return [
             'Nombre' => $this->faker->firstName(),
             'Apellidos' => $this->faker->lastName(),
             'email' => $this->faker->unique()->safeEmail(),
-            'password' => bcrypt('password'),
+            'password' => 'password',
             'idRol' => $rolUsuario,
-            'Activo' => $this->faker->boolean(90),
+            'Activo' => true,
             'FotoPerfil' => 'perfiles/default.jpg',
         ];
     }

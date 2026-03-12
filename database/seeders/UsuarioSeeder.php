@@ -11,60 +11,53 @@ class UsuarioSeeder extends Seeder
     public function run(): void
     {
         // Admin fijo
-        Usuario::create([
+        Usuario::updateOrCreate(['email' => 'admin@admin.com'], [
             'Nombre' => 'Admin',
             'Apellidos' => 'admin',
-            'email' => 'admin@admin.com',
             'password' => 'admin123',
             'idRol' => Rol::where('Nombre', 'admin')->first()->IDRol,
             'Activo' => true,
         ]);
 
         // Usuario estándar fijo
-        Usuario::create([
+        Usuario::updateOrCreate(['email' => 'alexlopez@tasklink.com'], [
             'Nombre' => 'Alex',
             'Apellidos' => 'Lopez',
-            'email' => 'alexlopez@tasklink.com',
             'password' => 'alexlopez1234',
             'idRol' => Rol::where('Nombre', 'admin')->first()->IDRol,
             'Activo' => true,
         ]);
-        Usuario::create([
+        Usuario::updateOrCreate(['email' => 'gabivilaplana@tasklink.com'], [
             'Nombre' => 'Gabi',
             'Apellidos' => 'Vilaplana',
-            'email' => 'gabivilaplana@tasklink.com',
             'password' => 'gabivilaplana1234',
             'idRol' => Rol::where('Nombre', 'admin')->first()->IDRol,
             'Activo' => true,
         ]);
-        Usuario::create([
+        Usuario::updateOrCreate(['email' => 'andresprueba@gmail.com'], [
             'Nombre' => 'Andres',
             'Apellidos' => 'Prueba',
-            'email' => 'andresprueba@gmail.com',
             'password' => 'andresprueba1234',
             'idRol' => Rol::where('Nombre', 'usuario')->first()->IDRol,
             'Activo' => true,
         ]);
-        Usuario::create([
+        Usuario::updateOrCreate(['email' => 'andreslopez@gmail.com'], [
             'Nombre' => 'Andres',
             'Apellidos' => 'Lopez',
-            'email' => 'andreslopez@gmail.com',
             'password' => 'andreslopez1234',
             'idRol' => Rol::where('Nombre', 'creadorServicio')->first()->IDRol,
             'Activo' => true,
         ]);
-          Usuario::create([
+        Usuario::updateOrCreate(['email' => 'a2000lex@hotmail.com'], [
             'Nombre' => 'Alex',
             'Apellidos' => 'Lopez España',
-            'email' => 'a2000lex@hotmail.com',
             'password' => 'alexlopez1234',
             'idRol' => Rol::where('Nombre', 'admin')->first()->IDRol,
             'Activo' => true,
         ]);
-          Usuario::create([
+        Usuario::updateOrCreate(['email' => 'gabired345@gmail.com'], [
             'Nombre' => 'Gabi',
             'Apellidos' => 'Vilaplana',
-            'email' => 'gabired345@gmail.com',
             'password' => 'gabi1234',
             'idRol' => Rol::where('Nombre', 'admin')->first()->IDRol,
             'Activo' => true,

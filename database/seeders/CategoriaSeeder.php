@@ -7,7 +7,7 @@ use App\Models\Categoria;
 
 class CategoriaSeeder extends Seeder
 {
-   public function run(): void
+    public function run(): void
     {
         $categorias = [
             [
@@ -55,7 +55,7 @@ class CategoriaSeeder extends Seeder
         ];
 
         foreach ($categorias as $categoria) {
-            Categoria::create($categoria);
+            Categoria::updateOrCreate(['Nombre' => $categoria['Nombre']], $categoria);
         }
     }
 }

@@ -44,15 +44,25 @@ class AuthenticatedSessionController extends Controller
 
             $request->session()->regenerate();
 
-            return response()->json([
-                'message' => 'Login exitoso',
-                'user' => $usuario
-            ], 200);
+            if ($request->wantsJson()) {
+                return response()->json([
+                    'message' => 'Login exitoso',
+                    'user' => $usuario
+                ], 200);
+            }
+
+            return redirect()->intended(route('dashboard'));
         }
 
-        return response()->json([
-            'message' => 'Las credenciales no coinciden o la cuenta no existe.'
-        ], 422);
+        if ($request->wantsJson()) {
+            return response()->json([
+                'message' => 'Las credenciales no coinciden o la cuenta no existe.'
+            ], 422);
+        }
+
+        return back()->withErrors([
+            'email' => __('auth.failed'),
+        ]);
     }
 
 

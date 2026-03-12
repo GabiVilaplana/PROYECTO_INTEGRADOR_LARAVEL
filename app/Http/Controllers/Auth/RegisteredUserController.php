@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\Usuario;
+use App\Models\Rol;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -35,18 +36,11 @@ class RegisteredUserController extends Controller
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
-        // Separar nombre y apellidos
-        $nombreCompleto = $request->name;
-        $partesNombre = explode(' ', $nombreCompleto, 2);
-        $nombre = $partesNombre[0];
-        $apellidos = $partesNombre[1] ?? '';
-
         $user = Usuario::create([
-            'Nombre' => $nombre,
-            'Apellidos' => $apellidos,
+            'name' => $request->name,
             'email' => $request->email,
-            'password' => $request->password, // El mutador del modelo Usuario hace el hash
-            'idRol' => 2, // Rol de cliente por defecto
+            'password' => $request->password,
+            'idRol' => Rol::firstOrCreate(['Nombre' => 'usuario'])->IDRol,
             'Activo' => true,
         ]);
 

@@ -10,14 +10,14 @@ RUN set -eux; \
       git curl zip unzip bash shadow openssl \
       icu icu-dev libxml2-dev oniguruma-dev \
       libpng-dev freetype-dev libjpeg-turbo-dev \
-      libzip-dev linux-headers \
+      libzip-dev linux-headers sqlite-dev \
       nodejs npm; \
     # Dependencias de compilación (phpize, autoconf, etc.)
     apk add --no-cache --virtual .build-deps $PHPIZE_DEPS; \
     # Configurar e instalar extensiones nativas
     docker-php-ext-configure gd --with-freetype --with-jpeg; \
     docker-php-ext-install -j"$(nproc)" \
-      pdo pdo_mysql mbstring exif pcntl bcmath intl gd zip; \
+      pdo pdo_mysql pdo_sqlite mbstring exif pcntl bcmath intl gd zip; \
     # PECL redis (requiere phpize/autoconf)
     pecl install redis; \
     docker-php-ext-enable redis; \

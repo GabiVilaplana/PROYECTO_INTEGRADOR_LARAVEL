@@ -5,11 +5,12 @@ namespace App\Models;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Notifications\Notifiable;
 
 class Usuario extends Authenticatable
 {
-    use HasApiTokens, HasFactory;
-    
+    use HasApiTokens, HasFactory, Notifiable;
+
     protected $appends = ['foto_perfil_url'];
 
 
@@ -20,19 +21,27 @@ class Usuario extends Authenticatable
     protected $fillable = [
         'Nombre',
         'Apellidos',
+        'name', // Virtual field for fill()
         'email',
-        'password',  // ¡esta es la columna real!
+        'password',
         'google_id',
         'google_token',
         'google_refresh_token',
         'idRol',
         'Activo',
         'FotoPerfil',
+        'email_verified_at',
+        'remember_token',
     ];
 
     protected $hidden = [
         'password',
         'remember_token',
+    ];
+
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+        'password' => 'hashed',
     ];
 
     // Relaciones
@@ -60,7 +69,17 @@ class Usuario extends Authenticatable
     // Nombre completo
     public function getNameAttribute()
     {
-        return $this->Nombre . ' ' . $this->Apellidos;
+        return trim($this->Nombre . ' ' . $this->Apellidos);
+    }
+
+    public function setNameAttribute($value)
+    {
+        if (empty($value))
+            return;
+
+        $partes = explode(' ', $value, 2);
+        $this->attributes['Nombre'] = $partes[0];
+        $this->attributes['Apellidos'] = $partes[1] ?? '';
     }
 
     // URL foto perfil
@@ -71,12 +90,16 @@ class Usuario extends Authenticatable
         }
         return asset('storage/perfiles/default.jpg');
     }
-    public function setPasswordAttribute($value)
-    {
-        $this->attributes['password'] = bcrypt($value);
-    }
     public function getAuthIdentifierName()
     {
         return 'IDUsuario';
+    }
+
+    /**
+     * Get the value of the model's primary key for compatibility with Laravel internals (like 'id').
+     */
+    public function getIdAttribute()
+    {
+        return $this->attributes['IDUsuario'] ?? null;
     }
 }
