@@ -1,14 +1,31 @@
 # Documentación Interactiva con Swagger
 
-**Objetivo:** Facilitar la integración manual y técnica de la API para externos o futuros desarrolladores.
+**Objetivo:** Facilitar la integración manual y técnica de la API para externos o futuros desarrolladores mediante una interfaz visual y funcional.
 
-## Implementación Técnica:
+## Detalles de Implementación:
 
-### 1. Documentación OpenAPI (L5-Swagger)
-Se instaló y configuró el paquete **L5-Swagger** para generar una interfaz visual de la API.
+### 1. Catálogo Técnico de Endpoints
 
--   **Anotaciones en Código**: Se utilizaron bloques de comentarios PHPDoc en los controladores para definir esquemas (`@OA\Schema`), parámetros de entrada y respuestas exitosas.
--   **Swagger UI**: Se habilitó una ruta dedicada (`/api/documentation`) donde se puede probar cada endpoint enviando datos reales.
+La API se ha estructurado siguiendo principios RESTful, agrupando las funcionalidades en módulos lógicos para facilitar su mantenimiento:
 
-### 2. Mantenimiento Automático
-Se configuró para que la documentación se regenere automáticamente al realizar cambios significativos en los controladores de la API, asegurando que siempre esté actualizada.
+- **Módulo de Servicios (`/api/servicios`)**:
+    - `GET /api/servicios`: Lista completa con filtros de búsqueda.
+    - `GET /api/servicios/{id}`: Detalle técnico profundo, incluyendo disponibilidad y galería.
+    - `GET /api/servicios/buscar`: Búsqueda geoespacial optimizada por coordenadas.
+- **Módulo de Usuario y Sesión (`/api/auth`, `/api/usuario`)**:
+    - `POST /api/login`: Generación de tokens de sesión Sanctum.
+    - `GET /api/usuario`: Recuperación del perfil del usuario autenticado.
+    - `PUT /api/usuario/foto`: Endpoint específico para carga asíncrona de avatares.
+- **Módulo de Reservas (`/api/reservas`)**:
+    - `POST /api/reservas`: Creación impulsada por validación de slots temporales.
+    - `GET /api/reservas/{id}`: Consulta de estado y detalles de facturación.
+
+### 2. Interfaz Visual Swagger UI
+
+El proyecto expone una interfaz interactiva donde se definen los esquemas de datos (`Schemas`) y los modelos de respuesta esperados. Esto reduce drásticamente el tiempo de integración para el frontend.
+
+![Interfaz Interactiva Swagger](../imagenes/rutasApi.png)
+
+### 3. Seguridad y Headers
+
+Todos los endpoints sensibles requieren la inclusión del header `Accept: application/json`. Además, para rutas privadas, es obligatorio el header `Authorization: Bearer {token}`, gestionado de forma transparente por el middleware de **Laravel Sanctum**.

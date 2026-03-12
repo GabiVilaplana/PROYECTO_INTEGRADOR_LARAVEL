@@ -1,17 +1,25 @@
 # Despliegue en Producción mediante Contenedores
 
-**Objetivo:** Trasladar la aplicación del entorno de desarrollo a un servidor estable y accesible al público.
+**Objetivo:** Garantizar una transición fluida del entorno de desarrollo al entorno de producción, maximizando el rendimiento y la disponibilidad.
 
-## Implementación Técnica:
+## Optimización y Build de la Aplicación:
 
-### 1. Optimización para Producción
-El despliegue final no es una copia directa del entorno local:
+### 1. Generación de Artefactos de Frontend (Vite)
 
--   **Build de Assets**: Se ejecutó `npm run build` para compilar y minificar los archivos JS/CSS de Vue, reduciendo drásticamente el peso de la web.
--   **Configuración de Laravel**: Se activó la caché de configuración, rutas y vistas mediante comandos artisan para acelerar el tiempo de respuesta del servidor PHP.
+Para producción, no utilizamos el servidor de desarrollo de Vite. En su lugar, generamos archivos estáticos altamente optimizados:
 
-### 2. Estructura de Docker en Producción
-Se adaptó el archivo `docker-compose.yml` para entornos vivos:
+- **Comando**: `npm run build`.
+- **Resultado**: Los archivos se minifican y se les añade un hash de versión en la carpeta `public/build`, lo que permite una gestión de caché agresiva en el navegador y reduce el tiempo de carga.
 
--   **Restart Policies**: Configurado como `unless-stopped` para asegurar que el servicio se reinicie automáticamente tras un posible fallo del servidor.
--   **Redes Aisladas**: Uso de redes internas de Docker para que la base de datos no sea accesible directamente desde internet, solo desde el contenedor de la aplicación.
+### 2. Preparación de la Imagen del Servidor
+
+Se utiliza un **Dockerfile multi-stage** para construir el servicio `app`:
+
+- **Instalación de Dependencias**: `composer install --no-dev --optimize-autoloader`.
+- **Caché de Configuración**: Se ejecutan los comandos `php artisan config:cache`, `route:cache` y `view:cache` durante el despliegue para eliminar la latencia de lectura de archivos en cada petición.
+
+![Proceso de Build de Assets](../imagenes/proyectoVue.png)
+
+### 3. Estrategia de Red y Seguridad
+
+En producción, el puerto de MySQL y Redis no se expone al host. Solo el puerto del servidor Web (Nginx) es accesible externamente, creando una arquitectura de red aislada y segura.

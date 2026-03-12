@@ -1,18 +1,27 @@
 # Dockerización y CI/CD
 
-**Objetivo:** Estandarizar el entorno para garantizar que "funciona en mi máquina" y en producción.
+**Objetivo:** Garantizar un entorno de ejecución inmutable y reproducible, eliminando los conflictos de dependencias entre entornos.
 
-## Implementación Técnica:
+## Arquitectura del Stack de Contenedores:
 
-### 1. Orquestación con Docker Compose
-Se orquestaron múltiples contenedores para cubrir todas las necesidades del proyecto:
+Se ha diseñado un ecosistema de microservicios orquestado mediante **Docker Compose**, lo que permite levantar todo el proyecto con un solo comando.
 
-- **app**: Backend Laravel (PHP-FPM).
-- **web**: Servidor Nginx para servir la web y la API.
-- **db**: Base de datos MySQL con volúmenes persistentes.
-- **redis**: Para la gestión de colas y caché.
-- **vite**: Para la compilación en tiempo real del frontend.
-- **n8n**: Plataforma de automatización integrada.
+### 1. Definición de Servicios (Docker Compose)
 
-### 2. CI/CD inicial
-Se definieron scripts en `composer.json` y `package.json` para automatizar las tareas de despliegue, preparación de la base de datos y compilación de assets.
+- **App (PHP-FPM 8.2)**: Contenedor núcleo que carga el código de Laravel. Incluye optimizaciones de caché de composer y extensiones como `bcmath` para cálculos de precios.
+- **Web (Nginx 1.27)**: Configurado específicamente para Laravel. Gestiona las cabeceras de seguridad y la redirección de peticiones estáticas vs PHP.
+- **Database (MySQL 8.4)**: Motor relacional con el nuevo esquema de autenticación por defecto de MySQL 8.
+- **Redis 7**: Almacenamiento en memoria volátil utilizado para acelerar las consultas frecuentes y gestionar el sistema de colas.
+- **PhPMyAdmin**: Herramienta de administración visual accesible en el puerto `8080`.
+- **n8n**: Plataforma de automatización que reside en el puerto `5678`, conectada a la API de Laravel para procesar flujos lógicos complejos.
+
+### 2. Gestión de Redes y Volúmenes
+
+- **Redes**: Todos los contenedores están bajo la red `laravel-network`, lo que permite que el servicio `app` llegue a `db` o `redis` usando simplemente sus nombres de servicio como host.
+- **Persistencia**: Se utilizan volúmenes con nombre (`db_data`, `n8n_data`) para que los datos sobrevivan al borrado de contenedores.
+
+![Estado de Microservicios](../imagenes/docker-compose-ps.png)
+
+### 3. Automatización Integrada
+
+El uso de `Dockerfile` personalizados permite que la imagen de producción sea significativamente más ligera y segura que la de desarrollo, siguiendo las mejores prácticas de la industria.

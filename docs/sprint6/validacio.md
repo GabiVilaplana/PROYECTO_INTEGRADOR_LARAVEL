@@ -1,19 +1,25 @@
-# Validación Final y Entrega al Cliente
+# Validación Final y Aseguramiento de Calidad
 
-**Objetivo:** Verificar que el producto final cumple con todas las expectativas y requerimientos funcionales.
+**Objetivo:** Validar que cada pieza del sistema funciona según los requerimientos especificados y que el producto final es estable ante fallos.
 
-## Implementación Técnica:
+## Metodología de Validación:
 
-### 1. Pruebas de Aceptación (UAT)
-Se realizaron sesiones de prueba con usuarios reales para validar los flujos críticos:
+### 1. Pruebas Unitarias y de Feature (PHPUnit)
 
--   **Reserva de Servicio**: Desde la búsqueda hasta la confirmación de pago.
--   **Panel del Profesional**: Gestión de disponibilidad y respuesta a mensajes.
+El corazón de la validación reside en la suite de pruebas automatizadas localizada en la carpeta `/tests`.
 
-### 2. Aseguramiento de Calidad (QA)
+- **Feature Tests**: Validan flujos completos, como el registro de un nuevo usuario, el envío de un mensaje o la creación de una reserva, simulando peticiones HTTP reales.
+- **Unit Tests**: Validan la lógica pura de los modelos y servicios sin necesidad de conexión a base de datos en muchos casos.
 
--   **Cross-Browser Testing**: Verificación de visualización correcta en Chrome, Firefox y Safari.
--   **Performance Testing**: Comprobación de que la SPA carga en menos de 2 segundos en condiciones normales de red.
+### 2. Resultados de la Suite de Pruebas
 
-### 3. Cierre del Proyecto
-Entrega del código fuente, documentación técnica (MkDocs) y manuales de usuario finales.
+Se ejecutan mediante el comando `php artisan test`. La suite garantiza que no existan regresiones (errores nuevos en código antiguo) al realizar cambios.
+
+
+
+![Resultados de Tests PHPUnit](../imagenes/test.png)
+
+### 3. Auditoría de Seguridad y Calidad (QA)
+
+- **Análisis Estático**: Se utiliza `Laravel Pint` para asegurar que todo el código sigue el estándar de estilo PSR-12.
+- **Inspección Manual**: Se han realizado pruebas cruzadas en diferentes navegadores para validar la responsividad de la interfaz de usuario.
