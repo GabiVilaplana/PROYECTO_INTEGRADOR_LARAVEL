@@ -35,6 +35,20 @@ class ValoracionApiController extends Controller
         $usuario = $request->user();
         $servicio = Servicio::findOrFail($servicioId);
 
+        // REGLA: El usuario debe tener al menos una reserva completada para este servicio
+        $tieneReservaCompletada = \App\Models\Reserva::where('idUsuario', $usuario->IDUsuario)
+            ->where('Estado', 'Completada')
+            ->whereHas('detalles', function($query) use ($servicioId) {
+                $query->where('idServicio', $servicioId);
+            })
+            ->exists();
+
+        if (!$tieneReservaCompletada) {
+            return response()->json([
+                'message' => 'Solo puedes valorar servicios que hayas reservado y completado previamente.'
+            ], 403);
+        }
+
         // Verificar si el usuario ya ha valorado este servicio
         $valoracionExistente = ValoracionServicio::where('idServicio', $servicioId)
             ->where('idUsuario', $usuario->IDUsuario)
